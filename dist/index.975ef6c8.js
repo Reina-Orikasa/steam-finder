@@ -27136,16 +27136,127 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "App", ()=>App);
 var _jsxDevRuntime = require("react/jsx-dev-runtime");
+var _react = require("react");
+var _s = $RefreshSig$();
 function App() {
-    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h1", {
-        className: "bg-yellow-400 text-center",
-        children: "Hello world!"
-    }, void 0, false, {
+    _s();
+    const [profileInfo, setProfileInfo] = (0, _react.useState)("");
+    async function getProfileInfo() {
+        const response = await fetch("/.netlify/functions/steam-fetch");
+        const json = await response.json();
+        const player_level = json[1].response.player_level;
+        const { avatarfull , personaname , realname , personastate , gameextrainfo  } = json[0].response.players[0];
+        setProfileInfo({
+            avatarfull,
+            personaname,
+            realname,
+            player_level,
+            personastate,
+            gameextrainfo
+        });
+    }
+    (0, _react.useEffect)(()=>{
+        getProfileInfo();
+    }, []);
+    console.log(profileInfo.gameextrainfo);
+    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+        children: [
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h1", {
+                className: "bg-yellow-400 text-center",
+                children: "Hello world!"
+            }, void 0, false, {
+                fileName: "src/App.js",
+                lineNumber: 29,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                className: "flex justify-center align-middle mt-6",
+                children: [
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                        children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("img", {
+                            src: profileInfo.avatarfull,
+                            className: "rounded-xl w-9/12 shadow-lg"
+                        }, void 0, false, {
+                            fileName: "src/App.js",
+                            lineNumber: 32,
+                            columnNumber: 11
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "src/App.js",
+                        lineNumber: 31,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                        children: [
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h1", {
+                                className: "text-6xl font-bold",
+                                children: profileInfo.personaname
+                            }, void 0, false, {
+                                fileName: "src/App.js",
+                                lineNumber: 38,
+                                columnNumber: 11
+                            }, this),
+                            profileInfo.personastate === 1 ? /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                className: "mb-2",
+                                children: [
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                                        className: "text-green-400",
+                                        children: "Online"
+                                    }, void 0, false, {
+                                        fileName: "src/App.js",
+                                        lineNumber: 41,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
+                                        children: [
+                                            "In game: ",
+                                            profileInfo.gameextrainfo
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "src/App.js",
+                                        lineNumber: 42,
+                                        columnNumber: 15
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "src/App.js",
+                                lineNumber: 40,
+                                columnNumber: 13
+                            }, this) : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                                children: "Offline"
+                            }, void 0, false, {
+                                fileName: "src/App.js",
+                                lineNumber: 45,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                                className: "border-2 border-green-500 rounded-full p-2",
+                                children: profileInfo.player_level
+                            }, void 0, false, {
+                                fileName: "src/App.js",
+                                lineNumber: 47,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "src/App.js",
+                        lineNumber: 37,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "src/App.js",
+                lineNumber: 30,
+                columnNumber: 7
+            }, this)
+        ]
+    }, void 0, true, {
         fileName: "src/App.js",
-        lineNumber: 2,
-        columnNumber: 10
+        lineNumber: 28,
+        columnNumber: 5
     }, this);
 }
+_s(App, "RQZeyrp2tHctY62fKkX75t7t5Kw=");
 _c = App;
 var _c;
 $RefreshReg$(_c, "App");
@@ -27155,7 +27266,7 @@ $RefreshReg$(_c, "App");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"gkKU3":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"gkKU3":[function(require,module,exports) {
 exports.interopDefault = function(a) {
     return a && a.__esModule ? a : {
         default: a
