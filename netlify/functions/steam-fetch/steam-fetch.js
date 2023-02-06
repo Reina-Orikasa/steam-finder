@@ -15,6 +15,10 @@ const handler = async function () {
       fetch(
         `https://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v1/?key=${api_key}&steamid=76561198082350199&count=1`
       ).then((resp) => resp.json()),
+      fetch(
+        `
+      https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key=${api_key}&steamid=76561198082350199&include_appinfo=true&include_extended_appinfo=false`
+      ).then((resp) => resp.json()),
     ]);
 
     const data = await response;
