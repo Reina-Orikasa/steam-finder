@@ -2,21 +2,29 @@
 
 const fetch = require('node-fetch');
 
-const handler = async function () {
+const handler = async function (event) {
+  const query = event.queryStringParameters;
+  let steamid = '';
+  if (query.steamid === '') {
+    steamid = '76561198082350199';
+  } else {
+    steamid = query.steamid;
+  }
+  console.log(query.steamid);
   try {
     const api_key = process.env.STEAM_KEY;
     const response = Promise.all([
       fetch(
-        `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${api_key}&steamids=76561198082350199`
+        `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=${api_key}&steamids=${steamid}`
       ).then((resp) => resp.json()),
       fetch(
-        `https://api.steampowered.com/IPlayerService/GetSteamLevel/v1/?key=${api_key}&steamid=76561198082350199`
+        `https://api.steampowered.com/IPlayerService/GetSteamLevel/v1/?key=${api_key}&steamid=${steamid}`
       ).then((resp) => resp.json()),
       fetch(
-        `https://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v1/?key=${api_key}&steamid=76561198082350199&count=1`
+        `https://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v1/?key=${api_key}&steamid=${steamid}`
       ).then((resp) => resp.json()),
       fetch(
-        `https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key=${api_key}&steamid=76561198082350199&include_appinfo=true&include_extended_appinfo=false`
+        `https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key=${api_key}&steamid=${steamid}&include_appinfo=true&include_extended_appinfo=false`
       ).then((resp) => resp.json()),
     ]);
 

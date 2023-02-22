@@ -27145,60 +27145,87 @@ var _s = $RefreshSig$();
 function App() {
     _s();
     const [profileInfo, setProfileInfo] = (0, _react.useState)("");
+    let [profileValue, setProfileValue] = (0, _react.useState)("");
+    const [profileSearch, updateProfileSearch] = (0, _react.useState)("");
+    const inpRef = (0, _react.useRef)();
+    let [errorMsg, updateErrorMsg] = (0, _react.useState)("");
     let dataLoaded = false;
-    let randomGameId = 0;
+    let allAppIds = "";
     async function getProfileInfo() {
-        const response = await fetch("/.netlify/functions/steam-fetch");
+        const response = await fetch(`/.netlify/functions/steam-fetch?steamid=${profileSearch}`);
         const json = await response.json();
-        const player_level = json[1].response.player_level;
-        const { avatarfull , personaname , realname , personastate , gameextrainfo , loccountrycode , profileurl  } = json[0].response.players[0];
-        const { appid , img_icon_url , name , playtime_forever  } = json[2].response.games[0];
-        const totalGames = json[3].response.game_count;
-        let gamesNeverPlayed = 0;
-        let maxHours = 0;
-        let maxGameName = "";
-        let maxGameId = "";
-        let allGameIds = [];
-        json[3].response.games.forEach((item)=>{
-            allGameIds.push(item.appid);
-            if (item.playtime_forever > maxHours) {
-                maxHours = item.playtime_forever;
-                maxGameName = item.name;
-                maxGameId = item.appid;
+        if (response.status !== 500) {
+            updateErrorMsg("");
+            const player_level = json[1].response.player_level;
+            const { avatarfull , personaname , realname , personastate , gameextrainfo , loccountrycode , profileurl  } = json[0].response.players[0];
+            const { appid , img_icon_url , name , playtime_forever , playtime_2weeks  } = json[2].response.games[0];
+            const totalGames = json[3].response.game_count;
+            let gamesNeverPlayed = 0;
+            let maxHours = 0;
+            let maxGameName = "";
+            let maxGameId = "";
+            let allGameIds = [];
+            json[3].response.games.forEach((item)=>{
+                allGameIds.push(item.appid);
+                if (item.playtime_forever > maxHours) {
+                    maxHours = item.playtime_forever;
+                    maxGameName = item.name;
+                    maxGameId = item.appid;
+                }
+                if (item.playtime_forever === 0) gamesNeverPlayed++;
+            });
+            setProfileInfo({
+                avatarfull,
+                personaname,
+                realname,
+                player_level,
+                personastate,
+                gameextrainfo,
+                appid,
+                img_icon_url,
+                name,
+                playtime_forever,
+                playtime_2weeks,
+                totalGames,
+                gamesNeverPlayed,
+                loccountrycode,
+                maxHours,
+                maxGameName,
+                maxGameId,
+                profileurl,
+                allGameIds
+            });
+        } else updateErrorMsg("You have attempted to enter an invalid steamID64!");
+    }
+    if (profileInfo.maxGameId != undefined) dataLoaded = true;
+    let { avatarfull , personaname , player_level , personastate , gameextrainfo , appid , img_icon_url , name , playtime_forever , playtime_2weeks , totalGames , gamesNeverPlayed , loccountrycode , maxHours , maxGameName , maxGameId , profileurl , allGameIds  } = profileInfo;
+    if (allGameIds) allAppIds = allGameIds.join(",");
+    async function getProfileWorth() {
+        const response = await fetch(`/.netlify/functions/getProfileWorth?allIds=${allAppIds}`);
+        let profileWorth = 0;
+        const json = await response.json();
+        for(let key in json){
+            if (json[key].data) {
+                if (json[key].data.price_overview) profileWorth += json[key].data.price_overview.final;
             }
-            if (item.playtime_forever === 0) gamesNeverPlayed++;
-        });
-        setProfileInfo({
-            avatarfull,
-            personaname,
-            realname,
-            player_level,
-            personastate,
-            gameextrainfo,
-            appid,
-            img_icon_url,
-            name,
-            playtime_forever,
-            totalGames,
-            gamesNeverPlayed,
-            loccountrycode,
-            maxHours,
-            maxGameName,
-            maxGameId,
-            profileurl,
-            allGameIds
-        });
+        }
+        setProfileValue(profileWorth);
     }
-    if (profileInfo.maxGameId != undefined) {
-        dataLoaded = true;
-        randomGameId = profileInfo.allGameIds[Math.floor(Math.random(profileInfo.allGameIds) * 100)];
+    function updateInput(e) {
+        updateProfileSearch(e.target.value);
     }
-    console.log(randomGameId);
-    let { avatarfull , personaname , realname , player_level , personastate , gameextrainfo , appid , img_icon_url , name , playtime_forever , totalGames , gamesNeverPlayed , loccountrycode , maxHours , maxGameName , maxGameId , profileurl , allGameIds  } = profileInfo;
+    function searchProfile() {
+        getProfileInfo();
+    }
     const recentGameImageURL = `https://cdn.akamai.steamstatic.com/steam/apps/${profileInfo.appid}/capsule_231x87.jpg`;
     (0, _react.useEffect)(()=>{
         getProfileInfo();
     }, []);
+    (0, _react.useEffect)(()=>{
+        getProfileWorth();
+    }, [
+        allAppIds
+    ]);
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
         className: "",
         children: [
@@ -27210,7 +27237,7 @@ function App() {
                         children: "Steam Finder"
                     }, void 0, false, {
                         fileName: "src/App.js",
-                        lineNumber: 104,
+                        lineNumber: 142,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
@@ -27218,189 +27245,307 @@ function App() {
                         children: "Totally not a copy of another site..."
                     }, void 0, false, {
                         fileName: "src/App.js",
-                        lineNumber: 105,
+                        lineNumber: 143,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "src/App.js",
-                lineNumber: 103,
+                lineNumber: 141,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
                 className: "mt-6 mb-12 text-center",
-                children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
-                    className: "bg-pink-300 text-black rounded-md px-4 py-2",
-                    placeholder: "Search..."
-                }, void 0, false, {
-                    fileName: "src/App.js",
-                    lineNumber: 109,
-                    columnNumber: 9
-                }, this)
-            }, void 0, false, {
+                children: [
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
+                        htmlFor: "steamid",
+                        children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                            className: "bg-pink-300 text-black rounded-md px-4 py-2",
+                            placeholder: "Search...",
+                            ref: inpRef,
+                            onChange: (e)=>updateInput(e)
+                        }, void 0, false, {
+                            fileName: "src/App.js",
+                            lineNumber: 148,
+                            columnNumber: 11
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "src/App.js",
+                        lineNumber: 147,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                        onClick: searchProfile,
+                        children: "Search"
+                    }, void 0, false, {
+                        fileName: "src/App.js",
+                        lineNumber: 155,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
+                        className: "text-xl text-red-500 font-bold",
+                        children: errorMsg
+                    }, void 0, false, {
+                        fileName: "src/App.js",
+                        lineNumber: 156,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
+                        children: [
+                            "Please go",
+                            " ",
+                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("a", {
+                                href: "https://steamid.io/",
+                                className: "hover:underline text-pink-600",
+                                target: "_blank",
+                                children: "here"
+                            }, void 0, false, {
+                                fileName: "src/App.js",
+                                lineNumber: 159,
+                                columnNumber: 11
+                            }, this),
+                            " ",
+                            "to find your steamID64"
+                        ]
+                    }, void 0, true, {
+                        fileName: "src/App.js",
+                        lineNumber: 157,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
                 fileName: "src/App.js",
-                lineNumber: 108,
+                lineNumber: 146,
                 columnNumber: 7
             }, this),
-            profileInfo === "" ? /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+            profileInfo === undefined || profileInfo === "" ? /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
                 className: "text-center",
                 children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
                     children: "Loading..."
                 }, void 0, false, {
                     fileName: "src/App.js",
-                    lineNumber: 117,
+                    lineNumber: 172,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "src/App.js",
-                lineNumber: 116,
+                lineNumber: 171,
                 columnNumber: 9
             }, this) : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
                 children: [
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                        className: "md:w-1/2 md:ml-96 bg-pink-300 py-2 rounded-xl",
+                        className: "flex justify-center align-middle",
                         children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                            className: "flex justify-center align-middle my-8 space-x-4",
-                            children: [
-                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                                    children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("img", {
-                                        src: avatarfull,
-                                        className: "rounded-xl w-10/12 shadow-lg"
-                                    }, void 0, false, {
-                                        fileName: "src/App.js",
-                                        lineNumber: 124,
-                                        columnNumber: 17
-                                    }, this)
-                                }, void 0, false, {
-                                    fileName: "src/App.js",
-                                    lineNumber: 123,
-                                    columnNumber: 15
-                                }, this),
-                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                                    className: "",
-                                    children: [
-                                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h1", {
-                                            className: "text-4xl md:text-5xl font-semibold mb-4",
-                                            children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("a", {
-                                                href: profileurl,
-                                                className: "hover:underline",
-                                                target: "_blank",
-                                                children: personaname
-                                            }, void 0, false, {
-                                                fileName: "src/App.js",
-                                                lineNumber: 131,
-                                                columnNumber: 19
-                                            }, this)
+                            className: "bg-pink-300 py-2 px-10 rounded-xl",
+                            children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                className: "flex justify-center align-middle my-8 space-x-4",
+                                children: [
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                        children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("img", {
+                                            src: avatarfull,
+                                            className: "rounded-xl shadow-lg mr-4",
+                                            alt: "avatar image"
                                         }, void 0, false, {
                                             fileName: "src/App.js",
-                                            lineNumber: 130,
-                                            columnNumber: 17
-                                        }, this),
-                                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                                            className: "mb-4",
-                                            children: [
-                                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
-                                                    className: "border-2 border-pink-500 rounded-full p-2 mr-2 font-light",
-                                                    children: player_level
-                                                }, void 0, false, {
-                                                    fileName: "src/App.js",
-                                                    lineNumber: 140,
-                                                    columnNumber: 19
-                                                }, this),
-                                                loccountrycode === undefined ? "" : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
-                                                    className: "border-2 border-slate-700 rounded-full p-2 font-light",
-                                                    children: loccountrycode
-                                                }, void 0, false, {
-                                                    fileName: "src/App.js",
-                                                    lineNumber: 146,
-                                                    columnNumber: 21
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "src/App.js",
-                                            lineNumber: 139,
-                                            columnNumber: 17
-                                        }, this),
-                                        personastate === 1 ? /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                                            className: "mt-2",
-                                            children: [
-                                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
-                                                    className: "text-slate-900 text-xl font-semibold",
-                                                    children: "Online"
-                                                }, void 0, false, {
-                                                    fileName: "src/App.js",
-                                                    lineNumber: 154,
-                                                    columnNumber: 21
-                                                }, this),
-                                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
-                                                    className: "text-slate-900 font-semibold text-xl",
-                                                    children: [
-                                                        "In game:",
-                                                        " ",
-                                                        gameextrainfo === undefined ? "none" : gameextrainfo
-                                                    ]
-                                                }, void 0, true, {
-                                                    fileName: "src/App.js",
-                                                    lineNumber: 157,
-                                                    columnNumber: 21
-                                                }, this)
-                                            ]
-                                        }, void 0, true, {
-                                            fileName: "src/App.js",
-                                            lineNumber: 153,
-                                            columnNumber: 19
-                                        }, this) : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
-                                            className: "font-light",
-                                            children: "Currently Offline"
-                                        }, void 0, false, {
-                                            fileName: "src/App.js",
-                                            lineNumber: 163,
+                                            lineNumber: 180,
                                             columnNumber: 19
                                         }, this)
+                                    }, void 0, false, {
+                                        fileName: "src/App.js",
+                                        lineNumber: 179,
+                                        columnNumber: 17
+                                    }, this),
+                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                        className: "",
+                                        children: [
+                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h1", {
+                                                className: "text-4xl md:text-5xl font-semibold mb-4",
+                                                children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("a", {
+                                                    href: profileurl,
+                                                    className: "hover:underline",
+                                                    target: "_blank",
+                                                    children: personaname
+                                                }, void 0, false, {
+                                                    fileName: "src/App.js",
+                                                    lineNumber: 188,
+                                                    columnNumber: 21
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "src/App.js",
+                                                lineNumber: 187,
+                                                columnNumber: 19
+                                            }, this),
+                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                                className: "mb-4",
+                                                children: [
+                                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                                                        className: "border-2 border-pink-500 rounded-full p-2 mr-2 font-light",
+                                                        children: player_level
+                                                    }, void 0, false, {
+                                                        fileName: "src/App.js",
+                                                        lineNumber: 197,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    loccountrycode === undefined ? "" : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                                                        className: "border-2 border-slate-700 rounded-full p-2 font-light",
+                                                        children: loccountrycode
+                                                    }, void 0, false, {
+                                                        fileName: "src/App.js",
+                                                        lineNumber: 203,
+                                                        columnNumber: 23
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "src/App.js",
+                                                lineNumber: 196,
+                                                columnNumber: 19
+                                            }, this),
+                                            personastate === 1 ? /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                                                className: "mt-2",
+                                                children: [
+                                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                                                        className: "text-slate-900 text-xl font-semibold",
+                                                        children: "Online"
+                                                    }, void 0, false, {
+                                                        fileName: "src/App.js",
+                                                        lineNumber: 211,
+                                                        columnNumber: 23
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
+                                                        className: "text-slate-900 font-semibold text-xl",
+                                                        children: [
+                                                            "In game:",
+                                                            " ",
+                                                            gameextrainfo === undefined ? "none" : gameextrainfo
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "src/App.js",
+                                                        lineNumber: 214,
+                                                        columnNumber: 23
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "src/App.js",
+                                                lineNumber: 210,
+                                                columnNumber: 21
+                                            }, this) : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                                                className: "font-light",
+                                                children: "Currently Offline"
+                                            }, void 0, false, {
+                                                fileName: "src/App.js",
+                                                lineNumber: 220,
+                                                columnNumber: 21
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "src/App.js",
+                                        lineNumber: 186,
+                                        columnNumber: 17
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "src/App.js",
+                                lineNumber: 178,
+                                columnNumber: 15
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "src/App.js",
+                            lineNumber: 177,
+                            columnNumber: 13
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "src/App.js",
+                        lineNumber: 176,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                        className: "mt-4 lg:mx-24 lg:px-24",
+                        children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                            className: "bg-pink-300 text-center py-6 sm:px-48 rounded-xl",
+                            children: [
+                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
+                                    className: "font-light text-slate-800 text-lg",
+                                    children: [
+                                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                                            className: "font-semibold text-slate-900 text-4xl",
+                                            children: [
+                                                "$",
+                                                profileValue / 100,
+                                                "*"
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "src/App.js",
+                                            lineNumber: 229,
+                                            columnNumber: 17
+                                        }, this),
+                                        " "
                                     ]
                                 }, void 0, true, {
                                     fileName: "src/App.js",
-                                    lineNumber: 129,
+                                    lineNumber: 228,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
+                                    children: "estimated account game value"
+                                }, void 0, false, {
+                                    fileName: "src/App.js",
+                                    lineNumber: 233,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
+                                    className: "font-light text-slate-800 text-lg mb-4",
+                                    children: "(includes current sales)"
+                                }, void 0, false, {
+                                    fileName: "src/App.js",
+                                    lineNumber: 234,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
+                                    children: "Disclaimer: games such as GTA V do not return a base price from Steam's API. This is due to GTA V (and likely other games) not selling a base game. Your account value will likely be higher and this is intended to give you a general value of how much your account is worth."
+                                }, void 0, false, {
+                                    fileName: "src/App.js",
+                                    lineNumber: 237,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "src/App.js",
-                            lineNumber: 122,
+                            lineNumber: 227,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "src/App.js",
-                        lineNumber: 121,
+                        lineNumber: 226,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                        className: "grid grid-cols-2 gap-2 md:mx-48",
+                        className: "grid grid-cols-2 gap-2 lg:mx-48",
                         children: [
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                                className: "text-center bg-pink-300 p-4 rounded-xl my-4",
+                                className: "text-center bg-pink-300 p-6 rounded-xl my-4",
                                 children: [
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
                                         className: "flex justify-center align-middle",
                                         children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("img", {
                                             src: recentGameImageURL,
-                                            className: "rounded-xl shadow-lg mb-3"
+                                            className: "rounded-xl shadow-lg mb-3",
+                                            alt: "image of recent game"
                                         }, void 0, false, {
                                             fileName: "src/App.js",
-                                            lineNumber: 171,
+                                            lineNumber: 249,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "src/App.js",
-                                        lineNumber: 170,
+                                        lineNumber: 248,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
                                         className: "font-light",
-                                        children: "Recently played game:"
+                                        children: "Most played game in 2 weeks:"
                                     }, void 0, false, {
                                         fileName: "src/App.js",
-                                        lineNumber: 176,
+                                        lineNumber: 255,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("a", {
@@ -27410,28 +27555,28 @@ function App() {
                                         children: name
                                     }, void 0, false, {
                                         fileName: "src/App.js",
-                                        lineNumber: 177,
+                                        lineNumber: 256,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
                                         className: "text-xl text-slate-800 font-semibold",
                                         children: [
-                                            (playtime_forever / 60).toFixed(1),
-                                            " hours total"
+                                            (playtime_2weeks / 60).toFixed(1),
+                                            " hours last two weeks."
                                         ]
                                     }, void 0, true, {
                                         fileName: "src/App.js",
-                                        lineNumber: 184,
+                                        lineNumber: 263,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "src/App.js",
-                                lineNumber: 169,
+                                lineNumber: 247,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                                className: "text-center bg-pink-300 p-4 rounded-xl my-4",
+                                className: "text-center bg-pink-300 pt-4 md:p-4 rounded-xl my-4",
                                 children: [
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
                                         className: "font-bold text-2xl text-slate-900",
@@ -27441,7 +27586,7 @@ function App() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "src/App.js",
-                                        lineNumber: 189,
+                                        lineNumber: 268,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
@@ -27452,7 +27597,7 @@ function App() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "src/App.js",
-                                        lineNumber: 192,
+                                        lineNumber: 271,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
@@ -27463,38 +27608,25 @@ function App() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "src/App.js",
-                                        lineNumber: 195,
-                                        columnNumber: 15
-                                    }, this),
-                                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
-                                        children: [
-                                            maxGameName,
-                                            " most played with ",
-                                            (maxHours / 60).toFixed(1),
-                                            " ",
-                                            "hours"
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "src/App.js",
-                                        lineNumber: 199,
+                                        lineNumber: 274,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "src/App.js",
-                                lineNumber: 188,
+                                lineNumber: 267,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "src/App.js",
-                        lineNumber: 168,
+                        lineNumber: 246,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "src/App.js",
-                lineNumber: 120,
+                lineNumber: 175,
                 columnNumber: 9
             }, this),
             dataLoaded === false ? "loading..." : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _jsxDevRuntime.Fragment), {
@@ -27504,15 +27636,14 @@ function App() {
                         gameHours: maxHours
                     }, void 0, false, {
                         fileName: "src/App.js",
-                        lineNumber: 212,
+                        lineNumber: 287,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _gameRecDefault.default), {
-                        id: randomGameId,
                         allIds: allGameIds
                     }, void 0, false, {
                         fileName: "src/App.js",
-                        lineNumber: 213,
+                        lineNumber: 288,
                         columnNumber: 11
                     }, this)
                 ]
@@ -27520,11 +27651,11 @@ function App() {
         ]
     }, void 0, true, {
         fileName: "src/App.js",
-        lineNumber: 102,
+        lineNumber: 140,
         columnNumber: 5
     }, this);
 }
-_s(App, "RQZeyrp2tHctY62fKkX75t7t5Kw=");
+_s(App, "DFc6VLGPXjEPD9F4PelITBvftCM=");
 _c = App;
 var _c;
 $RefreshReg$(_c, "App");
@@ -27534,7 +27665,154 @@ $RefreshReg$(_c, "App");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","./MostPlayed":"4a3m4","./GameRec":"gogH0"}],"gkKU3":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","./GameRec":"gogH0","./MostPlayed":"4a3m4","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"gogH0":[function(require,module,exports) {
+var $parcel$ReactRefreshHelpers$aa6b = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+var prevRefreshReg = window.$RefreshReg$;
+var prevRefreshSig = window.$RefreshSig$;
+$parcel$ReactRefreshHelpers$aa6b.prelude(module);
+
+try {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _jsxDevRuntime = require("react/jsx-dev-runtime");
+var _react = require("react");
+var _s = $RefreshSig$();
+function GameRec(appId) {
+    _s();
+    console.log(appId);
+    const [gameInfo, setGameInfo] = (0, _react.useState)("");
+    const [gameAppId, setgameAppId] = (0, _react.useState)(appId.id);
+    let loadingRandomGame = false;
+    function getGameInfo() {
+        fetch(`/.netlify/functions/getGameInfo?appId=${gameAppId}`).then((resp)=>resp.json()).then((info)=>setGameInfo(Object.values(info)[0].data));
+    }
+    let suggestGameURL = `https://store.steampowered.com/app/${gameAppId}`;
+    function getRandomGame() {
+        setgameAppId(appId.allIds[Math.floor(Math.random() * appId.allIds.length)]);
+        loadingRandomGame = true;
+    }
+    (0, _react.useEffect)(()=>{
+        setTimeout(()=>{
+            getGameInfo();
+            loadingRandomGame = false;
+        }, 1500);
+    }, [
+        gameAppId
+    ]);
+    (0, _react.useEffect)(()=>{
+        setTimeout(()=>{
+            getRandomGame();
+            loadingRandomGame = false;
+        }, 500);
+    }, [
+        appId
+    ]);
+    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _jsxDevRuntime.Fragment), {
+        children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+            className: "mb-8 lg:mx-24 lg:px-24",
+            children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                className: "bg-pink-300 text-center p-8 rounded-xl",
+                children: loadingRandomGame || gameInfo === undefined ? "loading..." : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _jsxDevRuntime.Fragment), {
+                    children: [
+                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h1", {
+                            className: "text-4xl mb-4 font-semibold",
+                            children: "How about this game?"
+                        }, void 0, false, {
+                            fileName: "src/GameRec.js",
+                            lineNumber: 41,
+                            columnNumber: 15
+                        }, this),
+                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                            className: "flex justify-center align-middle mb-6",
+                            children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("img", {
+                                src: gameInfo.header_image,
+                                className: "rounded-xl mb-2",
+                                alt: "image of the recommended game"
+                            }, void 0, false, {
+                                fileName: "src/GameRec.js",
+                                lineNumber: 45,
+                                columnNumber: 17
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "src/GameRec.js",
+                            lineNumber: 44,
+                            columnNumber: 15
+                        }, this),
+                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
+                            className: "font-bold text-3xl",
+                            children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("a", {
+                                href: suggestGameURL,
+                                className: "hover:underline",
+                                target: "_blank",
+                                children: gameInfo.name
+                            }, void 0, false, {
+                                fileName: "src/GameRec.js",
+                                lineNumber: 53,
+                                columnNumber: 17
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "src/GameRec.js",
+                            lineNumber: 52,
+                            columnNumber: 15
+                        }, this),
+                        gameInfo === "" || gameInfo.price_overview === undefined ? "" : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+                            className: "text-lg text-slate-800 mb-4",
+                            children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h4", {
+                                className: "text-xl font-light",
+                                children: gameInfo.release_date.date
+                            }, void 0, false, {
+                                fileName: "src/GameRec.js",
+                                lineNumber: 65,
+                                columnNumber: 19
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "src/GameRec.js",
+                            lineNumber: 64,
+                            columnNumber: 17
+                        }, this),
+                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
+                            className: "md:px-48 mb-4",
+                            children: gameInfo.short_description
+                        }, void 0, false, {
+                            fileName: "src/GameRec.js",
+                            lineNumber: 70,
+                            columnNumber: 15
+                        }, this),
+                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                            className: "border-2 rounded-xl p-2 my-2",
+                            onClick: getRandomGame,
+                            children: "Another!"
+                        }, void 0, false, {
+                            fileName: "src/GameRec.js",
+                            lineNumber: 71,
+                            columnNumber: 15
+                        }, this)
+                    ]
+                }, void 0, true)
+            }, void 0, false, {
+                fileName: "src/GameRec.js",
+                lineNumber: 36,
+                columnNumber: 9
+            }, this)
+        }, void 0, false, {
+            fileName: "src/GameRec.js",
+            lineNumber: 35,
+            columnNumber: 7
+        }, this)
+    }, void 0, false);
+}
+exports.default = GameRec;
+_s(GameRec, "Q8+AEv68Ntvbh4YBUNbv9xE+Fj4=");
+_c = GameRec;
+var _c;
+$RefreshReg$(_c, "GameRec");
+
+  $parcel$ReactRefreshHelpers$aa6b.postlude(module);
+} finally {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"gkKU3":[function(require,module,exports) {
 exports.interopDefault = function(a) {
     return a && a.__esModule ? a : {
         default: a
@@ -27717,16 +27995,19 @@ function MostPlayed(maxGameId) {
     }
     (0, _react.useEffect)(()=>{
         getMaxGameInfo();
-    }, []);
-    if (!maxGameInfo) return null;
+    }, [
+        maxGameId
+    ]);
+    if (maxGameInfo === "" || !maxGameInfo) return null;
     else {
         const { header_image , steam_appid , release_date , short_description , name  } = maxGameInfo;
         return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-            className: "mb-4 md:mx-24 px-24",
+            className: "mb-4 lg:mx-24 lg:px-24",
             children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                className: "bg-pink-300 text-center p-8 rounded-xl",
+                className: "bg-pink-300 text-center p-10 rounded-xl",
                 children: [
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h1", {
+                        className: "text-4xl mb-4 font-semibold",
                         children: "Your most played game"
                     }, void 0, false, {
                         fileName: "src/MostPlayed.js",
@@ -27737,7 +28018,8 @@ function MostPlayed(maxGameId) {
                         className: "flex justify-center align-middle mb-6",
                         children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("img", {
                             src: header_image,
-                            className: "rounded-xl mb-2"
+                            className: "rounded-xl mb-2",
+                            alt: "image of your most played game"
                         }, void 0, false, {
                             fileName: "src/MostPlayed.js",
                             lineNumber: 26,
@@ -27749,7 +28031,7 @@ function MostPlayed(maxGameId) {
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
-                        className: "font-bold text-xl",
+                        className: "font-bold text-3xl",
                         children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("a", {
                             href: `https://store.steampowered.com/app/${steam_appid}`,
                             className: "hover:underline",
@@ -27757,36 +28039,38 @@ function MostPlayed(maxGameId) {
                             children: name
                         }, void 0, false, {
                             fileName: "src/MostPlayed.js",
-                            lineNumber: 30,
+                            lineNumber: 34,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "src/MostPlayed.js",
-                        lineNumber: 29,
+                        lineNumber: 33,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h3", {
+                        className: "text-2xl font-bold",
                         children: [
                             (maxGameId.gameHours / 60).toFixed(1),
                             " hours"
                         ]
                     }, void 0, true, {
                         fileName: "src/MostPlayed.js",
-                        lineNumber: 39,
+                        lineNumber: 43,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
                         className: "text-lg text-slate-800 mb-4",
                         children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
+                            className: "font-light",
                             children: release_date.date
                         }, void 0, false, {
                             fileName: "src/MostPlayed.js",
-                            lineNumber: 42,
+                            lineNumber: 48,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "src/MostPlayed.js",
-                        lineNumber: 41,
+                        lineNumber: 47,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
@@ -27794,7 +28078,7 @@ function MostPlayed(maxGameId) {
                         children: short_description
                     }, void 0, false, {
                         fileName: "src/MostPlayed.js",
-                        lineNumber: 45,
+                        lineNumber: 51,
                         columnNumber: 11
                     }, this)
                 ]
@@ -27821,124 +28105,6 @@ $RefreshReg$(_c, "MostPlayed");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"gogH0":[function(require,module,exports) {
-var $parcel$ReactRefreshHelpers$aa6b = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
-var prevRefreshReg = window.$RefreshReg$;
-var prevRefreshSig = window.$RefreshSig$;
-$parcel$ReactRefreshHelpers$aa6b.prelude(module);
-
-try {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _jsxDevRuntime = require("react/jsx-dev-runtime");
-var _react = require("react");
-var _s = $RefreshSig$();
-function GameRec(appId) {
-    _s();
-    const [gameInfo, setGameInfo] = (0, _react.useState)("");
-    const [gameAppId, setgameAppId] = (0, _react.useState)("");
-    async function getGameInfo() {
-        await fetch(`/.netlify/functions/getGameInfo?appId=${appId.id}`).then((resp)=>resp.json()).then((info)=>setGameInfo(Object.values(info)[0].data));
-    }
-    let suggestGameURL = `https://store.steampowered.com/app/${gameAppId}`;
-    function getRandomGame() {
-        setgameAppId(Math.floor(Math.random(appId.allIds) * 100));
-    }
-    (0, _react.useEffect)(()=>{
-        getGameInfo();
-        getRandomGame();
-    }, []);
-    console.log(gameAppId);
-    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-        className: "mb-8 md:mx-24 px-24",
-        children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-            className: "bg-pink-300 text-center p-8 rounded-xl",
-            children: [
-                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h1", {
-                    className: "text-4xl mb-4",
-                    children: "How about this game?"
-                }, void 0, false, {
-                    fileName: "src/GameRec.js",
-                    lineNumber: 24,
-                    columnNumber: 9
-                }, this),
-                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                    className: "flex justify-center align-middle mb-6",
-                    children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("img", {
-                        src: gameInfo.header_image,
-                        className: "rounded-xl mb-2"
-                    }, void 0, false, {
-                        fileName: "src/GameRec.js",
-                        lineNumber: 26,
-                        columnNumber: 11
-                    }, this)
-                }, void 0, false, {
-                    fileName: "src/GameRec.js",
-                    lineNumber: 25,
-                    columnNumber: 9
-                }, this),
-                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
-                    className: "font-bold text-xl",
-                    children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("a", {
-                        href: suggestGameURL,
-                        className: "hover:underline",
-                        target: "_blank",
-                        children: gameInfo.name
-                    }, void 0, false, {
-                        fileName: "src/GameRec.js",
-                        lineNumber: 30,
-                        columnNumber: 11
-                    }, this)
-                }, void 0, false, {
-                    fileName: "src/GameRec.js",
-                    lineNumber: 29,
-                    columnNumber: 9
-                }, this),
-                gameInfo.price_overview === undefined ? "" : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                    className: "text-lg text-slate-800 mb-4",
-                    children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
-                        children: gameInfo.release_date.date
-                    }, void 0, false, {
-                        fileName: "src/GameRec.js",
-                        lineNumber: 38,
-                        columnNumber: 13
-                    }, this)
-                }, void 0, false, {
-                    fileName: "src/GameRec.js",
-                    lineNumber: 37,
-                    columnNumber: 11
-                }, this),
-                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
-                    className: "md:px-48",
-                    children: gameInfo.short_description
-                }, void 0, false, {
-                    fileName: "src/GameRec.js",
-                    lineNumber: 41,
-                    columnNumber: 9
-                }, this)
-            ]
-        }, void 0, true, {
-            fileName: "src/GameRec.js",
-            lineNumber: 23,
-            columnNumber: 7
-        }, this)
-    }, void 0, false, {
-        fileName: "src/GameRec.js",
-        lineNumber: 22,
-        columnNumber: 5
-    }, this);
-}
-exports.default = GameRec;
-_s(GameRec, "dXexyYY/P8FoLy8LFUc/FC+/19E=");
-_c = GameRec;
-var _c;
-$RefreshReg$(_c, "GameRec");
-
-  $parcel$ReactRefreshHelpers$aa6b.postlude(module);
-} finally {
-  window.$RefreshReg$ = prevRefreshReg;
-  window.$RefreshSig$ = prevRefreshSig;
-}
-},{"react/jsx-dev-runtime":"iTorj","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","react":"21dqq"}]},["1xC6H","jC2qd","8lqZg"], "8lqZg", "parcelRequire2507")
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}]},["1xC6H","jC2qd","8lqZg"], "8lqZg", "parcelRequire2507")
 
 //# sourceMappingURL=index.975ef6c8.js.map

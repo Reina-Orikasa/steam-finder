@@ -1,80 +1,85 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import GameRec from './GameRec';
 import MostPlayed from './MostPlayed';
 
 export function App() {
   const [profileInfo, setProfileInfo] = useState('');
+  let [profileValue, setProfileValue] = useState('');
+  const [profileSearch, updateProfileSearch] = useState('');
+  const inpRef = useRef();
+  let [errorMsg, updateErrorMsg] = useState('');
   let dataLoaded = false;
-  let randomGameId = 0;
+  let allAppIds = '';
   async function getProfileInfo() {
-    const response = await fetch('/.netlify/functions/steam-fetch');
+    const response = await fetch(
+      `/.netlify/functions/steam-fetch?steamid=${profileSearch}`
+    );
     const json = await response.json();
-    const player_level = json[1].response.player_level;
-    const {
-      avatarfull,
-      personaname,
-      realname,
-      personastate,
-      gameextrainfo,
-      loccountrycode,
-      profileurl,
-    } = json[0].response.players[0];
-    const { appid, img_icon_url, name, playtime_forever } =
-      json[2].response.games[0];
-    const totalGames = json[3].response.game_count;
-    let gamesNeverPlayed = 0;
-    let maxHours = 0;
-    let maxGameName = '';
-    let maxGameId = '';
-    let allGameIds = [];
-    json[3].response.games.forEach((item) => {
-      allGameIds.push(item.appid);
-      if (item.playtime_forever > maxHours) {
-        maxHours = item.playtime_forever;
-        maxGameName = item.name;
-        maxGameId = item.appid;
-      }
-      if (item.playtime_forever === 0) {
-        gamesNeverPlayed++;
-      }
-    });
+    if (response.status !== 500) {
+      updateErrorMsg('');
+      const player_level = json[1].response.player_level;
+      const {
+        avatarfull,
+        personaname,
+        realname,
+        personastate,
+        gameextrainfo,
+        loccountrycode,
+        profileurl,
+      } = json[0].response.players[0];
+      const { appid, img_icon_url, name, playtime_forever, playtime_2weeks } =
+        json[2].response.games[0];
+      const totalGames = json[3].response.game_count;
+      let gamesNeverPlayed = 0;
+      let maxHours = 0;
+      let maxGameName = '';
+      let maxGameId = '';
+      let allGameIds = [];
+      json[3].response.games.forEach((item) => {
+        allGameIds.push(item.appid);
+        if (item.playtime_forever > maxHours) {
+          maxHours = item.playtime_forever;
+          maxGameName = item.name;
+          maxGameId = item.appid;
+        }
+        if (item.playtime_forever === 0) {
+          gamesNeverPlayed++;
+        }
+      });
 
-    setProfileInfo({
-      avatarfull,
-      personaname,
-      realname,
-      player_level,
-      personastate,
-      gameextrainfo,
-      appid,
-      img_icon_url,
-      name,
-      playtime_forever,
-      totalGames,
-      gamesNeverPlayed,
-      loccountrycode,
-      maxHours,
-      maxGameName,
-      maxGameId,
-      profileurl,
-      allGameIds,
-    });
+      setProfileInfo({
+        avatarfull,
+        personaname,
+        realname,
+        player_level,
+        personastate,
+        gameextrainfo,
+        appid,
+        img_icon_url,
+        name,
+        playtime_forever,
+        playtime_2weeks,
+        totalGames,
+        gamesNeverPlayed,
+        loccountrycode,
+        maxHours,
+        maxGameName,
+        maxGameId,
+        profileurl,
+        allGameIds,
+      });
+    } else {
+      updateErrorMsg('You have attempted to enter an invalid steamID64!');
+    }
   }
 
   if (profileInfo.maxGameId != undefined) {
     dataLoaded = true;
-    randomGameId =
-      profileInfo.allGameIds[
-        Math.floor(Math.random(profileInfo.allGameIds) * 100)
-      ];
   }
-
-  console.log(randomGameId);
 
   let {
     avatarfull,
     personaname,
-    realname,
     player_level,
     personastate,
     gameextrainfo,
@@ -82,6 +87,7 @@ export function App() {
     img_icon_url,
     name,
     playtime_forever,
+    playtime_2weeks,
     totalGames,
     gamesNeverPlayed,
     loccountrycode,
@@ -92,11 +98,43 @@ export function App() {
     allGameIds,
   } = profileInfo;
 
+  if (allGameIds) {
+    allAppIds = allGameIds.join(',');
+  }
+
+  async function getProfileWorth() {
+    const response = await fetch(
+      `/.netlify/functions/getProfileWorth?allIds=${allAppIds}`
+    );
+    let profileWorth = 0;
+    const json = await response.json();
+    for (let key in json) {
+      if (json[key].data) {
+        if (json[key].data.price_overview) {
+          profileWorth += json[key].data.price_overview.final;
+        }
+      }
+    }
+    setProfileValue(profileWorth);
+  }
+
+  function updateInput(e) {
+    updateProfileSearch(e.target.value);
+  }
+
+  function searchProfile() {
+    getProfileInfo();
+  }
+
   const recentGameImageURL = `https://cdn.akamai.steamstatic.com/steam/apps/${profileInfo.appid}/capsule_231x87.jpg`;
 
   useEffect(() => {
     getProfileInfo();
   }, []);
+
+  useEffect(() => {
+    getProfileWorth();
+  }, [allAppIds]);
 
   return (
     <div className="">
@@ -106,74 +144,115 @@ export function App() {
       </div>
 
       <div className="mt-6 mb-12 text-center">
-        <input
-          className="bg-pink-300 text-black rounded-md px-4 py-2"
-          placeholder="Search..."
-        ></input>
+        <label htmlFor="steamid">
+          <input
+            className="bg-pink-300 text-black rounded-md px-4 py-2"
+            placeholder="Search..."
+            ref={inpRef}
+            onChange={(e) => updateInput(e)}
+          ></input>
+        </label>
+        <button onClick={searchProfile}>Search</button>
+        <p className="text-xl text-red-500 font-bold">{errorMsg}</p>
+        <p>
+          Please go{' '}
+          <a
+            href="https://steamid.io/"
+            className="hover:underline text-pink-600"
+            target="_blank"
+          >
+            here
+          </a>{' '}
+          to find your steamID64
+        </p>
       </div>
 
-      {profileInfo === '' ? (
+      {profileInfo === undefined || profileInfo === '' ? (
         <div className="text-center">
           <h2>Loading...</h2>
         </div>
       ) : (
         <div>
-          <div className="md:w-1/2 md:ml-96 bg-pink-300 py-2 rounded-xl">
-            <div className="flex justify-center align-middle my-8 space-x-4">
-              <div>
-                <img
-                  src={avatarfull}
-                  className="rounded-xl w-10/12 shadow-lg"
-                />
-              </div>
-              <div className="">
-                <h1 className="text-4xl md:text-5xl font-semibold mb-4">
-                  <a
-                    href={profileurl}
-                    className="hover:underline"
-                    target="_blank"
-                  >
-                    {personaname}
-                  </a>
-                </h1>
-                <div className="mb-4">
-                  <span className="border-2 border-pink-500 rounded-full p-2 mr-2 font-light">
-                    {player_level}
-                  </span>
-                  {loccountrycode === undefined ? (
-                    ''
-                  ) : (
-                    <span className="border-2 border-slate-700 rounded-full p-2 font-light">
-                      {loccountrycode}
+          <div className="flex justify-center align-middle">
+            <div className="bg-pink-300 py-2 px-10 rounded-xl">
+              <div className="flex justify-center align-middle my-8 space-x-4">
+                <div>
+                  <img
+                    src={avatarfull}
+                    className="rounded-xl shadow-lg mr-4"
+                    alt="avatar image"
+                  />
+                </div>
+                <div className="">
+                  <h1 className="text-4xl md:text-5xl font-semibold mb-4">
+                    <a
+                      href={profileurl}
+                      className="hover:underline"
+                      target="_blank"
+                    >
+                      {personaname}
+                    </a>
+                  </h1>
+                  <div className="mb-4">
+                    <span className="border-2 border-pink-500 rounded-full p-2 mr-2 font-light">
+                      {player_level}
                     </span>
+                    {loccountrycode === undefined ? (
+                      ''
+                    ) : (
+                      <span className="border-2 border-slate-700 rounded-full p-2 font-light">
+                        {loccountrycode}
+                      </span>
+                    )}
+                  </div>
+
+                  {personastate === 1 ? (
+                    <div className="mt-2">
+                      <span className="text-slate-900 text-xl font-semibold">
+                        Online
+                      </span>
+                      <p className="text-slate-900 font-semibold text-xl">
+                        In game:{' '}
+                        {gameextrainfo === undefined ? 'none' : gameextrainfo}
+                      </p>
+                    </div>
+                  ) : (
+                    <span className="font-light">Currently Offline</span>
                   )}
                 </div>
-
-                {personastate === 1 ? (
-                  <div className="mt-2">
-                    <span className="text-slate-900 text-xl font-semibold">
-                      Online
-                    </span>
-                    <p className="text-slate-900 font-semibold text-xl">
-                      In game:{' '}
-                      {gameextrainfo === undefined ? 'none' : gameextrainfo}
-                    </p>
-                  </div>
-                ) : (
-                  <span className="font-light">Currently Offline</span>
-                )}
               </div>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-2 md:mx-48">
-            <div className="text-center bg-pink-300 p-4 rounded-xl my-4">
+          <div className="mt-4 lg:mx-24 lg:px-24">
+            <div className="bg-pink-300 text-center py-6 sm:px-48 rounded-xl">
+              <p className="font-light text-slate-800 text-lg">
+                <span className="font-semibold text-slate-900 text-4xl">
+                  ${profileValue / 100}*
+                </span>{' '}
+              </p>
+              <p>estimated account game value</p>
+              <p className="font-light text-slate-800 text-lg mb-4">
+                (includes current sales)
+              </p>
+              <p>
+                Disclaimer: games such as GTA V do not return a base price from
+                Steam's API. This is due to GTA V (and likely other games) not
+                selling a base game. Your account value will likely be higher
+                and this is intended to give you a general value of how much
+                your account is worth.
+              </p>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-2 lg:mx-48">
+            <div className="text-center bg-pink-300 p-6 rounded-xl my-4">
               <div className="flex justify-center align-middle">
                 <img
                   src={recentGameImageURL}
                   className="rounded-xl shadow-lg mb-3"
+                  alt="image of recent game"
                 ></img>
               </div>
-              <p className="font-light">Recently played game:</p>
+              <p className="font-light">Most played game in 2 weeks:</p>
               <a
                 href={'https://store.steampowered.com/app/' + appid}
                 className="text-slate-900 font-bold hover:underline text-2xl"
@@ -182,10 +261,10 @@ export function App() {
                 {name}
               </a>
               <h2 className="text-xl text-slate-800 font-semibold">
-                {(playtime_forever / 60).toFixed(1)} hours total
+                {(playtime_2weeks / 60).toFixed(1)} hours last two weeks.
               </h2>
             </div>
-            <div className="text-center bg-pink-300 p-4 rounded-xl my-4">
+            <div className="text-center bg-pink-300 pt-4 md:p-4 rounded-xl my-4">
               <p className="font-bold text-2xl text-slate-900">
                 {totalGames} owned games
               </p>
@@ -195,10 +274,6 @@ export function App() {
               <p className="font-bold text-slate-900 text-2xl">
                 {((100 * gamesNeverPlayed) / totalGames).toFixed(0)}% of library
                 unplayed
-              </p>
-              <p>
-                {maxGameName} most played with {(maxHours / 60).toFixed(1)}{' '}
-                hours
               </p>
             </div>
           </div>
@@ -210,7 +285,7 @@ export function App() {
       ) : (
         <>
           <MostPlayed appId={maxGameId} gameHours={maxHours} />
-          <GameRec id={randomGameId} allIds={allGameIds} />
+          <GameRec allIds={allGameIds} />
         </>
       )}
     </div>

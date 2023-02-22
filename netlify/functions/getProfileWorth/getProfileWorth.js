@@ -4,10 +4,10 @@ const fetch = require('node-fetch');
 
 const handler = async function (event) {
   const query = event.queryStringParameters;
-  const gameId = query.appId;
+  const allAppIds = query.allIds;
   try {
     const response = await fetch(
-      `https://store.steampowered.com/api/appdetails?appids=${gameId}&&cc=us&l=English`
+      `https://store.steampowered.com/api/appdetails/?appids=${allAppIds}&filters=price_overview&cc=us`
     );
     if (!response.ok) {
       // NOT res.status >= 200 && res.status < 300

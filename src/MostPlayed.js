@@ -11,22 +11,26 @@ export default function MostPlayed(maxGameId) {
 
   useEffect(() => {
     getMaxGameInfo();
-  }, []);
+  }, [maxGameId]);
 
-  if (!maxGameInfo) {
+  if (maxGameInfo === '' || !maxGameInfo) {
     return null;
   } else {
     const { header_image, steam_appid, release_date, short_description, name } =
       maxGameInfo;
     return (
-      <div className="mb-4 md:mx-24 px-24">
-        <div className="bg-pink-300 text-center p-8 rounded-xl">
-          <h1>Your most played game</h1>
+      <div className="mb-4 lg:mx-24 lg:px-24">
+        <div className="bg-pink-300 text-center p-10 rounded-xl">
+          <h1 className="text-4xl mb-4 font-semibold">Your most played game</h1>
           <div className="flex justify-center align-middle mb-6">
-            <img src={header_image} className="rounded-xl mb-2" />
+            <img
+              src={header_image}
+              className="rounded-xl mb-2"
+              alt="image of your most played game"
+            />
           </div>
 
-          <h2 className="font-bold text-xl">
+          <h2 className="font-bold text-3xl">
             <a
               href={`https://store.steampowered.com/app/${steam_appid}`}
               className="hover:underline"
@@ -36,10 +40,12 @@ export default function MostPlayed(maxGameId) {
             </a>
           </h2>
 
-          <h3>{(maxGameId.gameHours / 60).toFixed(1)} hours</h3>
+          <h3 className="text-2xl font-bold">
+            {(maxGameId.gameHours / 60).toFixed(1)} hours
+          </h3>
 
           <div className="text-lg text-slate-800 mb-4">
-            <h2>{release_date.date}</h2>
+            <h2 className="font-light">{release_date.date}</h2>
           </div>
 
           <p className="md:px-48">{short_description}</p>
