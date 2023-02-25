@@ -1,16 +1,23 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import GameRec from './GameRec';
+import Input from './Input';
 import MostPlayed from './MostPlayed';
 
 export function App() {
   const [profileInfo, setProfileInfo] = useState('');
-  let [profileValue, setProfileValue] = useState('');
+  const [profileValue, setProfileValue] = useState('');
   const [profileSearch, updateProfileSearch] = useState('');
-  const inpRef = useRef();
   let [errorMsg, updateErrorMsg] = useState('');
+  let [privateAccount, setPrivateAccount] = useState(false);
   let dataLoaded = false;
   let allAppIds = '';
   async function getProfileInfo() {
+    let totalGames = '';
+    let gamesNeverPlayed = 0;
+    let maxHours = 0;
+    let maxGameName = '';
+    let maxGameId = '';
+    let allGameIds = [];
     const response = await fetch(
       `/.netlify/functions/steam-fetch?steamid=${profileSearch}`
     );
@@ -27,25 +34,28 @@ export function App() {
         loccountrycode,
         profileurl,
       } = json[0].response.players[0];
-      const { appid, img_icon_url, name, playtime_forever, playtime_2weeks } =
-        json[2].response.games[0];
-      const totalGames = json[3].response.game_count;
-      let gamesNeverPlayed = 0;
-      let maxHours = 0;
-      let maxGameName = '';
-      let maxGameId = '';
-      let allGameIds = [];
-      json[3].response.games.forEach((item) => {
-        allGameIds.push(item.appid);
-        if (item.playtime_forever > maxHours) {
-          maxHours = item.playtime_forever;
-          maxGameName = item.name;
-          maxGameId = item.appid;
-        }
-        if (item.playtime_forever === 0) {
-          gamesNeverPlayed++;
-        }
-      });
+
+      if (json[2].response.games === undefined) {
+        updateErrorMsg('Your account must be set to public!');
+        setPrivateAccount(true);
+      } else {
+        setPrivateAccount(false);
+        var { appid, img_icon_url, name, playtime_forever, playtime_2weeks } =
+          json[2].response.games[0];
+
+        totalGames = json[3].response.game_count;
+        json[3].response.games.forEach((item) => {
+          allGameIds.push(item.appid);
+          if (item.playtime_forever > maxHours) {
+            maxHours = item.playtime_forever;
+            maxGameName = item.name;
+            maxGameId = item.appid;
+          }
+          if (item.playtime_forever === 0) {
+            gamesNeverPlayed++;
+          }
+        });
+      }
 
       setProfileInfo({
         avatarfull,
@@ -84,15 +94,15 @@ export function App() {
     personastate,
     gameextrainfo,
     appid,
-    img_icon_url,
+
     name,
-    playtime_forever,
+
     playtime_2weeks,
     totalGames,
     gamesNeverPlayed,
     loccountrycode,
     maxHours,
-    maxGameName,
+
     maxGameId,
     profileurl,
     allGameIds,
@@ -118,8 +128,8 @@ export function App() {
     setProfileValue(profileWorth);
   }
 
-  function updateInput(e) {
-    updateProfileSearch(e.target.value);
+  function updateInput(value) {
+    updateProfileSearch(value);
   }
 
   function searchProfile() {
@@ -136,6 +146,10 @@ export function App() {
     getProfileWorth();
   }, [allAppIds]);
 
+  useEffect(() => {
+    searchProfile();
+  }, [profileSearch]);
+
   return (
     <div className="">
       <div className="text-center mb-6 ">
@@ -144,30 +158,20 @@ export function App() {
       </div>
 
       <div className="mt-6 mb-12 text-center">
-        <label htmlFor="steamid">
-          <input
-            className="bg-pink-300 text-black rounded-md px-4 py-2"
-            placeholder="Search..."
-            ref={inpRef}
-            onChange={(e) => updateInput(e)}
-          ></input>
-        </label>
-        <button onClick={searchProfile}>Search</button>
+        <Input changeInput={updateInput} searchId={profileSearch} />
         <p className="text-xl text-red-500 font-bold">{errorMsg}</p>
         <p>
-          Please go{' '}
           <a
             href="https://steamid.io/"
             className="hover:underline text-pink-600"
             target="_blank"
           >
-            here
+            Please go here to find your steamID64
           </a>{' '}
-          to find your steamID64
         </p>
       </div>
 
-      {profileInfo === undefined || profileInfo === '' ? (
+      {profileInfo === undefined || profileInfo === '' || privateAccount ? (
         <div className="text-center">
           <h2>Loading...</h2>
         </div>
@@ -280,7 +284,7 @@ export function App() {
         </div>
       )}
 
-      {dataLoaded === false ? (
+      {dataLoaded === false || privateAccount ? (
         'loading...'
       ) : (
         <>

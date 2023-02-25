@@ -1,33 +1,44 @@
 import { useEffect, useState } from 'react';
 
 export default function GameRec(appId) {
-  console.log(appId);
   const [gameInfo, setGameInfo] = useState('');
   const [gameAppId, setgameAppId] = useState(appId.id);
+  const [loadingState, setLoadingState] = useState(false);
   let loadingRandomGame = false;
+
   function getGameInfo() {
-    fetch(`/.netlify/functions/getGameInfo?appId=${gameAppId}`)
-      .then((resp) => resp.json())
-      .then((info) => setGameInfo(Object.values(info)[0].data));
+    if (gameAppId !== undefined) {
+      fetch(`/.netlify/functions/getGameInfo?appId=${gameAppId}`)
+        .then((resp) => resp.json())
+        .then((info) => setGameInfo(Object.values(info)[0].data));
+    }
   }
   let suggestGameURL = `https://store.steampowered.com/app/${gameAppId}`;
 
   function getRandomGame() {
     setgameAppId(appId.allIds[Math.floor(Math.random() * appId.allIds.length)]);
-    loadingRandomGame = true;
   }
+
+  // random game
   useEffect(() => {
+    setLoadingState(true);
+    loadingRandomGame = true;
     setTimeout(() => {
-      getGameInfo();
       loadingRandomGame = false;
+      setLoadingState(false);
+      getGameInfo();
     }, 1500);
   }, [gameAppId]);
 
+  // initial load
   useEffect(() => {
+    setLoadingState(true);
+    loadingRandomGame = true;
     setTimeout(() => {
-      getRandomGame();
       loadingRandomGame = false;
-    }, 500);
+      setLoadingState(false);
+      getRandomGame();
+    }, 200);
   }, [appId]);
 
   return (
@@ -62,9 +73,9 @@ export default function GameRec(appId) {
                 ''
               ) : (
                 <div className="text-lg text-slate-800 mb-4">
-                  <h4 className="text-xl font-light">
+                  <p className="text-xl font-light">
                     {gameInfo.release_date.date}
-                  </h4>
+                  </p>
                 </div>
               )}
               <p className="md:px-48 mb-4">{gameInfo.short_description}</p>
@@ -74,6 +85,7 @@ export default function GameRec(appId) {
               >
                 Another!
               </button>
+              <p>{loadingState || loadingRandomGame ? 'loading' : ''}</p>
             </>
           )}
         </div>

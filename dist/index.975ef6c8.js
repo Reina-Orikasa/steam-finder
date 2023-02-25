@@ -27139,41 +27139,50 @@ var _jsxDevRuntime = require("react/jsx-dev-runtime");
 var _react = require("react");
 var _gameRec = require("./GameRec");
 var _gameRecDefault = parcelHelpers.interopDefault(_gameRec);
+var _input = require("./Input");
+var _inputDefault = parcelHelpers.interopDefault(_input);
 var _mostPlayed = require("./MostPlayed");
 var _mostPlayedDefault = parcelHelpers.interopDefault(_mostPlayed);
 var _s = $RefreshSig$();
 function App() {
     _s();
     const [profileInfo, setProfileInfo] = (0, _react.useState)("");
-    let [profileValue, setProfileValue] = (0, _react.useState)("");
+    const [profileValue, setProfileValue] = (0, _react.useState)("");
     const [profileSearch, updateProfileSearch] = (0, _react.useState)("");
-    const inpRef = (0, _react.useRef)();
     let [errorMsg, updateErrorMsg] = (0, _react.useState)("");
+    let [privateAccount, setPrivateAccount] = (0, _react.useState)(false);
     let dataLoaded = false;
     let allAppIds = "";
     async function getProfileInfo() {
+        let totalGames = "";
+        let gamesNeverPlayed = 0;
+        let maxHours = 0;
+        let maxGameName = "";
+        let maxGameId = "";
+        let allGameIds = [];
         const response = await fetch(`/.netlify/functions/steam-fetch?steamid=${profileSearch}`);
         const json = await response.json();
         if (response.status !== 500) {
             updateErrorMsg("");
             const player_level = json[1].response.player_level;
             const { avatarfull , personaname , realname , personastate , gameextrainfo , loccountrycode , profileurl  } = json[0].response.players[0];
-            const { appid , img_icon_url , name , playtime_forever , playtime_2weeks  } = json[2].response.games[0];
-            const totalGames = json[3].response.game_count;
-            let gamesNeverPlayed = 0;
-            let maxHours = 0;
-            let maxGameName = "";
-            let maxGameId = "";
-            let allGameIds = [];
-            json[3].response.games.forEach((item)=>{
-                allGameIds.push(item.appid);
-                if (item.playtime_forever > maxHours) {
-                    maxHours = item.playtime_forever;
-                    maxGameName = item.name;
-                    maxGameId = item.appid;
-                }
-                if (item.playtime_forever === 0) gamesNeverPlayed++;
-            });
+            if (json[2].response.games === undefined) {
+                updateErrorMsg("Your account must be set to public!");
+                setPrivateAccount(true);
+            } else {
+                setPrivateAccount(false);
+                var { appid , img_icon_url , name , playtime_forever , playtime_2weeks  } = json[2].response.games[0];
+                totalGames = json[3].response.game_count;
+                json[3].response.games.forEach((item)=>{
+                    allGameIds.push(item.appid);
+                    if (item.playtime_forever > maxHours) {
+                        maxHours = item.playtime_forever;
+                        maxGameName = item.name;
+                        maxGameId = item.appid;
+                    }
+                    if (item.playtime_forever === 0) gamesNeverPlayed++;
+                });
+            }
             setProfileInfo({
                 avatarfull,
                 personaname,
@@ -27198,7 +27207,7 @@ function App() {
         } else updateErrorMsg("You have attempted to enter an invalid steamID64!");
     }
     if (profileInfo.maxGameId != undefined) dataLoaded = true;
-    let { avatarfull , personaname , player_level , personastate , gameextrainfo , appid , img_icon_url , name , playtime_forever , playtime_2weeks , totalGames , gamesNeverPlayed , loccountrycode , maxHours , maxGameName , maxGameId , profileurl , allGameIds  } = profileInfo;
+    let { avatarfull , personaname , player_level , personastate , gameextrainfo , appid , name , playtime_2weeks , totalGames , gamesNeverPlayed , loccountrycode , maxHours , maxGameId , profileurl , allGameIds  } = profileInfo;
     if (allGameIds) allAppIds = allGameIds.join(",");
     async function getProfileWorth() {
         const response = await fetch(`/.netlify/functions/getProfileWorth?allIds=${allAppIds}`);
@@ -27211,8 +27220,8 @@ function App() {
         }
         setProfileValue(profileWorth);
     }
-    function updateInput(e) {
-        updateProfileSearch(e.target.value);
+    function updateInput(value) {
+        updateProfileSearch(value);
     }
     function searchProfile() {
         getProfileInfo();
@@ -27226,6 +27235,11 @@ function App() {
     }, [
         allAppIds
     ]);
+    (0, _react.useEffect)(()=>{
+        searchProfile();
+    }, [
+        profileSearch
+    ]);
     return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
         className: "",
         children: [
@@ -27237,7 +27251,7 @@ function App() {
                         children: "Steam Finder"
                     }, void 0, false, {
                         fileName: "src/App.js",
-                        lineNumber: 142,
+                        lineNumber: 156,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
@@ -27245,41 +27259,24 @@ function App() {
                         children: "Totally not a copy of another site..."
                     }, void 0, false, {
                         fileName: "src/App.js",
-                        lineNumber: 143,
+                        lineNumber: 157,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "src/App.js",
-                lineNumber: 141,
+                lineNumber: 155,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
                 className: "mt-6 mb-12 text-center",
                 children: [
-                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
-                        htmlFor: "steamid",
-                        children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
-                            className: "bg-pink-300 text-black rounded-md px-4 py-2",
-                            placeholder: "Search...",
-                            ref: inpRef,
-                            onChange: (e)=>updateInput(e)
-                        }, void 0, false, {
-                            fileName: "src/App.js",
-                            lineNumber: 148,
-                            columnNumber: 11
-                        }, this)
+                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _inputDefault.default), {
+                        changeInput: updateInput,
+                        searchId: profileSearch
                     }, void 0, false, {
                         fileName: "src/App.js",
-                        lineNumber: 147,
-                        columnNumber: 9
-                    }, this),
-                    /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
-                        onClick: searchProfile,
-                        children: "Search"
-                    }, void 0, false, {
-                        fileName: "src/App.js",
-                        lineNumber: 155,
+                        lineNumber: 161,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
@@ -27287,49 +27284,46 @@ function App() {
                         children: errorMsg
                     }, void 0, false, {
                         fileName: "src/App.js",
-                        lineNumber: 156,
+                        lineNumber: 162,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
                         children: [
-                            "Please go",
-                            " ",
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("a", {
                                 href: "https://steamid.io/",
                                 className: "hover:underline text-pink-600",
                                 target: "_blank",
-                                children: "here"
+                                children: "Please go here to find your steamID64"
                             }, void 0, false, {
                                 fileName: "src/App.js",
-                                lineNumber: 159,
+                                lineNumber: 164,
                                 columnNumber: 11
                             }, this),
-                            " ",
-                            "to find your steamID64"
+                            " "
                         ]
                     }, void 0, true, {
                         fileName: "src/App.js",
-                        lineNumber: 157,
+                        lineNumber: 163,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "src/App.js",
-                lineNumber: 146,
+                lineNumber: 160,
                 columnNumber: 7
             }, this),
-            profileInfo === undefined || profileInfo === "" ? /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
+            profileInfo === undefined || profileInfo === "" || privateAccount ? /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
                 className: "text-center",
                 children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
                     children: "Loading..."
                 }, void 0, false, {
                     fileName: "src/App.js",
-                    lineNumber: 172,
+                    lineNumber: 176,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "src/App.js",
-                lineNumber: 171,
+                lineNumber: 175,
                 columnNumber: 9
             }, this) : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
                 children: [
@@ -27347,12 +27341,12 @@ function App() {
                                             alt: "avatar image"
                                         }, void 0, false, {
                                             fileName: "src/App.js",
-                                            lineNumber: 180,
+                                            lineNumber: 184,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "src/App.js",
-                                        lineNumber: 179,
+                                        lineNumber: 183,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -27367,12 +27361,12 @@ function App() {
                                                     children: personaname
                                                 }, void 0, false, {
                                                     fileName: "src/App.js",
-                                                    lineNumber: 188,
+                                                    lineNumber: 192,
                                                     columnNumber: 21
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "src/App.js",
-                                                lineNumber: 187,
+                                                lineNumber: 191,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -27383,7 +27377,7 @@ function App() {
                                                         children: player_level
                                                     }, void 0, false, {
                                                         fileName: "src/App.js",
-                                                        lineNumber: 197,
+                                                        lineNumber: 201,
                                                         columnNumber: 21
                                                     }, this),
                                                     loccountrycode === undefined ? "" : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
@@ -27391,13 +27385,13 @@ function App() {
                                                         children: loccountrycode
                                                     }, void 0, false, {
                                                         fileName: "src/App.js",
-                                                        lineNumber: 203,
+                                                        lineNumber: 207,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "src/App.js",
-                                                lineNumber: 196,
+                                                lineNumber: 200,
                                                 columnNumber: 19
                                             }, this),
                                             personastate === 1 ? /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -27408,7 +27402,7 @@ function App() {
                                                         children: "Online"
                                                     }, void 0, false, {
                                                         fileName: "src/App.js",
-                                                        lineNumber: 211,
+                                                        lineNumber: 215,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
@@ -27420,42 +27414,42 @@ function App() {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "src/App.js",
-                                                        lineNumber: 214,
+                                                        lineNumber: 218,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "src/App.js",
-                                                lineNumber: 210,
+                                                lineNumber: 214,
                                                 columnNumber: 21
                                             }, this) : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
                                                 className: "font-light",
                                                 children: "Currently Offline"
                                             }, void 0, false, {
                                                 fileName: "src/App.js",
-                                                lineNumber: 220,
+                                                lineNumber: 224,
                                                 columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "src/App.js",
-                                        lineNumber: 186,
+                                        lineNumber: 190,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "src/App.js",
-                                lineNumber: 178,
+                                lineNumber: 182,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "src/App.js",
-                            lineNumber: 177,
+                            lineNumber: 181,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "src/App.js",
-                        lineNumber: 176,
+                        lineNumber: 180,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -27475,21 +27469,21 @@ function App() {
                                             ]
                                         }, void 0, true, {
                                             fileName: "src/App.js",
-                                            lineNumber: 229,
+                                            lineNumber: 233,
                                             columnNumber: 17
                                         }, this),
                                         " "
                                     ]
                                 }, void 0, true, {
                                     fileName: "src/App.js",
-                                    lineNumber: 228,
+                                    lineNumber: 232,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
                                     children: "estimated account game value"
                                 }, void 0, false, {
                                     fileName: "src/App.js",
-                                    lineNumber: 233,
+                                    lineNumber: 237,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
@@ -27497,25 +27491,25 @@ function App() {
                                     children: "(includes current sales)"
                                 }, void 0, false, {
                                     fileName: "src/App.js",
-                                    lineNumber: 234,
+                                    lineNumber: 238,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
                                     children: "Disclaimer: games such as GTA V do not return a base price from Steam's API. This is due to GTA V (and likely other games) not selling a base game. Your account value will likely be higher and this is intended to give you a general value of how much your account is worth."
                                 }, void 0, false, {
                                     fileName: "src/App.js",
-                                    lineNumber: 237,
+                                    lineNumber: 241,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "src/App.js",
-                            lineNumber: 227,
+                            lineNumber: 231,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "src/App.js",
-                        lineNumber: 226,
+                        lineNumber: 230,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -27532,12 +27526,12 @@ function App() {
                                             alt: "image of recent game"
                                         }, void 0, false, {
                                             fileName: "src/App.js",
-                                            lineNumber: 249,
+                                            lineNumber: 253,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "src/App.js",
-                                        lineNumber: 248,
+                                        lineNumber: 252,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
@@ -27545,7 +27539,7 @@ function App() {
                                         children: "Most played game in 2 weeks:"
                                     }, void 0, false, {
                                         fileName: "src/App.js",
-                                        lineNumber: 255,
+                                        lineNumber: 259,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("a", {
@@ -27555,7 +27549,7 @@ function App() {
                                         children: name
                                     }, void 0, false, {
                                         fileName: "src/App.js",
-                                        lineNumber: 256,
+                                        lineNumber: 260,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
@@ -27566,13 +27560,13 @@ function App() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "src/App.js",
-                                        lineNumber: 263,
+                                        lineNumber: 267,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "src/App.js",
-                                lineNumber: 247,
+                                lineNumber: 251,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -27586,7 +27580,7 @@ function App() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "src/App.js",
-                                        lineNumber: 268,
+                                        lineNumber: 272,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
@@ -27597,7 +27591,7 @@ function App() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "src/App.js",
-                                        lineNumber: 271,
+                                        lineNumber: 275,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
@@ -27608,42 +27602,42 @@ function App() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "src/App.js",
-                                        lineNumber: 274,
+                                        lineNumber: 278,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "src/App.js",
-                                lineNumber: 267,
+                                lineNumber: 271,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "src/App.js",
-                        lineNumber: 246,
+                        lineNumber: 250,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "src/App.js",
-                lineNumber: 175,
+                lineNumber: 179,
                 columnNumber: 9
             }, this),
-            dataLoaded === false ? "loading..." : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _jsxDevRuntime.Fragment), {
+            dataLoaded === false || privateAccount ? "loading..." : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _jsxDevRuntime.Fragment), {
                 children: [
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _mostPlayedDefault.default), {
                         appId: maxGameId,
                         gameHours: maxHours
                     }, void 0, false, {
                         fileName: "src/App.js",
-                        lineNumber: 287,
+                        lineNumber: 291,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _gameRecDefault.default), {
                         allIds: allGameIds
                     }, void 0, false, {
                         fileName: "src/App.js",
-                        lineNumber: 288,
+                        lineNumber: 292,
                         columnNumber: 11
                     }, this)
                 ]
@@ -27651,11 +27645,11 @@ function App() {
         ]
     }, void 0, true, {
         fileName: "src/App.js",
-        lineNumber: 140,
+        lineNumber: 154,
         columnNumber: 5
     }, this);
 }
-_s(App, "DFc6VLGPXjEPD9F4PelITBvftCM=");
+_s(App, "n9ygoWdMeuhLFHiKUnbpJ2XQgTI=");
 _c = App;
 var _c;
 $RefreshReg$(_c, "App");
@@ -27665,7 +27659,7 @@ $RefreshReg$(_c, "App");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","./GameRec":"gogH0","./MostPlayed":"4a3m4","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"gogH0":[function(require,module,exports) {
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","./GameRec":"gogH0","./MostPlayed":"4a3m4","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","./Input":"8hyda"}],"gogH0":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$aa6b = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;
@@ -27679,31 +27673,38 @@ var _react = require("react");
 var _s = $RefreshSig$();
 function GameRec(appId) {
     _s();
-    console.log(appId);
     const [gameInfo, setGameInfo] = (0, _react.useState)("");
     const [gameAppId, setgameAppId] = (0, _react.useState)(appId.id);
+    const [loadingState, setLoadingState] = (0, _react.useState)(false);
     let loadingRandomGame = false;
     function getGameInfo() {
-        fetch(`/.netlify/functions/getGameInfo?appId=${gameAppId}`).then((resp)=>resp.json()).then((info)=>setGameInfo(Object.values(info)[0].data));
+        if (gameAppId !== undefined) fetch(`/.netlify/functions/getGameInfo?appId=${gameAppId}`).then((resp)=>resp.json()).then((info)=>setGameInfo(Object.values(info)[0].data));
     }
     let suggestGameURL = `https://store.steampowered.com/app/${gameAppId}`;
     function getRandomGame() {
         setgameAppId(appId.allIds[Math.floor(Math.random() * appId.allIds.length)]);
-        loadingRandomGame = true;
     }
+    // random game
     (0, _react.useEffect)(()=>{
+        setLoadingState(true);
+        loadingRandomGame = true;
         setTimeout(()=>{
-            getGameInfo();
             loadingRandomGame = false;
+            setLoadingState(false);
+            getGameInfo();
         }, 1500);
     }, [
         gameAppId
     ]);
+    // initial load
     (0, _react.useEffect)(()=>{
+        setLoadingState(true);
+        loadingRandomGame = true;
         setTimeout(()=>{
-            getRandomGame();
             loadingRandomGame = false;
-        }, 500);
+            setLoadingState(false);
+            getRandomGame();
+        }, 200);
     }, [
         appId
     ]);
@@ -27719,7 +27720,7 @@ function GameRec(appId) {
                             children: "How about this game?"
                         }, void 0, false, {
                             fileName: "src/GameRec.js",
-                            lineNumber: 41,
+                            lineNumber: 52,
                             columnNumber: 15
                         }, this),
                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -27730,12 +27731,12 @@ function GameRec(appId) {
                                 alt: "image of the recommended game"
                             }, void 0, false, {
                                 fileName: "src/GameRec.js",
-                                lineNumber: 45,
+                                lineNumber: 56,
                                 columnNumber: 17
                             }, this)
                         }, void 0, false, {
                             fileName: "src/GameRec.js",
-                            lineNumber: 44,
+                            lineNumber: 55,
                             columnNumber: 15
                         }, this),
                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
@@ -27747,27 +27748,27 @@ function GameRec(appId) {
                                 children: gameInfo.name
                             }, void 0, false, {
                                 fileName: "src/GameRec.js",
-                                lineNumber: 53,
+                                lineNumber: 64,
                                 columnNumber: 17
                             }, this)
                         }, void 0, false, {
                             fileName: "src/GameRec.js",
-                            lineNumber: 52,
+                            lineNumber: 63,
                             columnNumber: 15
                         }, this),
                         gameInfo === "" || gameInfo.price_overview === undefined ? "" : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
                             className: "text-lg text-slate-800 mb-4",
-                            children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h4", {
+                            children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
                                 className: "text-xl font-light",
                                 children: gameInfo.release_date.date
                             }, void 0, false, {
                                 fileName: "src/GameRec.js",
-                                lineNumber: 65,
+                                lineNumber: 76,
                                 columnNumber: 19
                             }, this)
                         }, void 0, false, {
                             fileName: "src/GameRec.js",
-                            lineNumber: 64,
+                            lineNumber: 75,
                             columnNumber: 17
                         }, this),
                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
@@ -27775,7 +27776,7 @@ function GameRec(appId) {
                             children: gameInfo.short_description
                         }, void 0, false, {
                             fileName: "src/GameRec.js",
-                            lineNumber: 70,
+                            lineNumber: 81,
                             columnNumber: 15
                         }, this),
                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
@@ -27784,25 +27785,32 @@ function GameRec(appId) {
                             children: "Another!"
                         }, void 0, false, {
                             fileName: "src/GameRec.js",
-                            lineNumber: 71,
+                            lineNumber: 82,
+                            columnNumber: 15
+                        }, this),
+                        /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
+                            children: loadingState || loadingRandomGame ? "loading" : ""
+                        }, void 0, false, {
+                            fileName: "src/GameRec.js",
+                            lineNumber: 88,
                             columnNumber: 15
                         }, this)
                     ]
                 }, void 0, true)
             }, void 0, false, {
                 fileName: "src/GameRec.js",
-                lineNumber: 36,
+                lineNumber: 47,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "src/GameRec.js",
-            lineNumber: 35,
+            lineNumber: 46,
             columnNumber: 7
         }, this)
     }, void 0, false);
 }
 exports.default = GameRec;
-_s(GameRec, "Q8+AEv68Ntvbh4YBUNbv9xE+Fj4=");
+_s(GameRec, "poTmxUTqrIZGF7kXEyWxfqf4a4Q=");
 _c = GameRec;
 var _c;
 $RefreshReg$(_c, "GameRec");
@@ -28105,6 +28113,61 @@ $RefreshReg$(_c, "MostPlayed");
   window.$RefreshReg$ = prevRefreshReg;
   window.$RefreshSig$ = prevRefreshSig;
 }
-},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}]},["1xC6H","jC2qd","8lqZg"], "8lqZg", "parcelRequire2507")
+},{"react/jsx-dev-runtime":"iTorj","react":"21dqq","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"8hyda":[function(require,module,exports) {
+var $parcel$ReactRefreshHelpers$d160 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+var prevRefreshReg = window.$RefreshReg$;
+var prevRefreshSig = window.$RefreshSig$;
+$parcel$ReactRefreshHelpers$d160.prelude(module);
+
+try {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _jsxDevRuntime = require("react/jsx-dev-runtime");
+var _react = require("react");
+var _s = $RefreshSig$();
+function Input(props) {
+    _s();
+    const [currentInput, changeCurrentInput] = (0, _react.useState)("");
+    return /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _jsxDevRuntime.Fragment), {
+        children: [
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("label", {
+                htmlFor: "steamid",
+                children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("input", {
+                    className: "bg-pink-300 text-black rounded-md px-4 py-2",
+                    placeholder: "Search...",
+                    onChange: (e)=>changeCurrentInput(e.target.value)
+                }, void 0, false, {
+                    fileName: "src/Input.js",
+                    lineNumber: 8,
+                    columnNumber: 9
+                }, this)
+            }, void 0, false, {
+                fileName: "src/Input.js",
+                lineNumber: 7,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
+                onClick: ()=>props.changeInput(currentInput),
+                children: "Search"
+            }, void 0, false, {
+                fileName: "src/Input.js",
+                lineNumber: 14,
+                columnNumber: 7
+            }, this)
+        ]
+    }, void 0, true);
+}
+exports.default = Input;
+_s(Input, "btiaAZlwcn/n3jO/djjR1O+UgR8=");
+_c = Input;
+var _c;
+$RefreshReg$(_c, "Input");
+
+  $parcel$ReactRefreshHelpers$d160.postlude(module);
+} finally {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+},{"react/jsx-dev-runtime":"iTorj","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru","react":"21dqq"}]},["1xC6H","jC2qd","8lqZg"], "8lqZg", "parcelRequire2507")
 
 //# sourceMappingURL=index.975ef6c8.js.map
