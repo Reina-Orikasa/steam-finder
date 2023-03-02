@@ -35,13 +35,39 @@ export function App() {
         profileurl,
       } = json[0].response.players[0];
 
-      if (json[2].response.games === undefined) {
+      let recentAppId = '';
+      let recentImg_icon_url = '';
+      let recentName = '';
+      let recentPlaytime2Weeks = '';
+
+      if (json[3].response.games === undefined) {
         updateErrorMsg('Your account must be set to public!');
         setPrivateAccount(true);
+      } else if (json[2].response.total_count == 0) {
+        recentAppId = null;
+        recentImg_icon_url = null;
+        recentName = 'None';
+        recentPlaytime2Weeks = 0;
+
+        totalGames = json[3].response.game_count;
+        json[3].response.games.forEach((item) => {
+          allGameIds.push(item.appid);
+          if (item.playtime_forever > maxHours) {
+            maxHours = item.playtime_forever;
+            maxGameName = item.name;
+            maxGameId = item.appid;
+          }
+          if (item.playtime_forever === 0) {
+            gamesNeverPlayed++;
+          }
+        });
       } else {
         setPrivateAccount(false);
-        var { appid, img_icon_url, name, playtime_forever, playtime_2weeks } =
-          json[2].response.games[0];
+        let recentGame = json[2].response;
+        console.log(recentGame.games[0]);
+        recentAppId = recentGame.games[0].appid;
+        recentName = recentGame.games[0].name;
+        recentPlaytime2Weeks = recentGame.games[0].playtime_2weeks;
 
         totalGames = json[3].response.game_count;
         json[3].response.games.forEach((item) => {
@@ -64,11 +90,10 @@ export function App() {
         player_level,
         personastate,
         gameextrainfo,
-        appid,
-        img_icon_url,
-        name,
-        playtime_forever,
-        playtime_2weeks,
+        recentAppId,
+        recentImg_icon_url,
+        recentName,
+        recentPlaytime2Weeks,
         totalGames,
         gamesNeverPlayed,
         loccountrycode,
@@ -93,16 +118,14 @@ export function App() {
     player_level,
     personastate,
     gameextrainfo,
-    appid,
-
-    name,
-
-    playtime_2weeks,
+    recentAppId,
+    recentName,
+    recentPlaytime2Weeks,
+    recentImg_icon_url,
     totalGames,
     gamesNeverPlayed,
     loccountrycode,
     maxHours,
-
     maxGameId,
     profileurl,
     allGameIds,
@@ -136,7 +159,9 @@ export function App() {
     getProfileInfo();
   }
 
-  const recentGameImageURL = `https://cdn.akamai.steamstatic.com/steam/apps/${profileInfo.appid}/capsule_231x87.jpg`;
+  if (recentImg_icon_url != null) {
+    recentImg_icon_url = `https://cdn.akamai.steamstatic.com/steam/apps/${profileInfo.recentAppId}/capsule_231x87.jpg`;
+  }
 
   useEffect(() => {
     getProfileInfo();
@@ -212,7 +237,7 @@ export function App() {
 
                   {personastate === 1 ? (
                     <div className="mt-2">
-                      <span className="text-slate-900 text-xl font-semibold">
+                      <span className="text-slate-900 text-xl font-bold">
                         Online
                       </span>
                       <p className="text-slate-900 font-semibold text-xl">
@@ -251,21 +276,21 @@ export function App() {
             <div className="text-center bg-pink-300 p-6 rounded-xl my-4">
               <div className="flex justify-center align-middle">
                 <img
-                  src={recentGameImageURL}
+                  src={recentImg_icon_url}
                   className="rounded-xl shadow-lg mb-3"
                   alt="image of recent game"
                 ></img>
               </div>
               <p className="font-light">Most played game in 2 weeks:</p>
               <a
-                href={'https://store.steampowered.com/app/' + appid}
+                href={'https://store.steampowered.com/app/' + recentAppId}
                 className="text-slate-900 font-bold hover:underline text-2xl"
                 target="_blank"
               >
-                {name}
+                {recentName}
               </a>
               <h2 className="text-xl text-slate-800 font-semibold">
-                {(playtime_2weeks / 60).toFixed(1)} hours last two weeks.
+                {(recentPlaytime2Weeks / 60).toFixed(1)} hours last two weeks.
               </h2>
             </div>
             <div className="text-center bg-pink-300 pt-4 md:p-4 rounded-xl my-4">

@@ -4,13 +4,13 @@ const fetch = require('node-fetch');
 
 const handler = async function (event) {
   const query = event.queryStringParameters;
-  let steamid = '';
-  if (query.steamid === '') {
+  console.log(query);
+  let steamid = query.steamid;
+
+  if (steamid === '') {
     steamid = '76561198082350199';
-  } else {
-    steamid = query.steamid;
   }
-  console.log(query.steamid);
+
   try {
     const api_key = process.env.STEAM_KEY;
     const response = Promise.all([
