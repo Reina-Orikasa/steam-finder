@@ -11,7 +11,12 @@ export default function Input(props) {
           onChange={(e) => changeCurrentInput(e.target.value)}
         ></input>
       </label>
-      <button onClick={() => props.changeInput(currentInput)}>Search</button>
+      <button
+        onClick={() => props.changeInput(currentInput)}
+        className="p-2 border-slate-500 border rounded-xl ml-2"
+      >
+        Search
+      </button>
     </>
   );
 }
