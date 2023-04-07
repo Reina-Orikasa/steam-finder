@@ -27,6 +27,8 @@ export default function MostPlayed(maxGameId) {
               src={header_image}
               className="rounded-xl mb-2"
               alt="image of your most played game"
+              width={460}
+              height={215}
             />
           </div>
 
