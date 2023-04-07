@@ -264,6 +264,8 @@ export function App() {
                     src={avatarfull}
                     className="rounded-xl shadow-lg mr-4"
                     alt="avatar image"
+                    width={184}
+                    height={184}
                   />
                 </div>
                 <div className="">
@@ -308,11 +310,16 @@ export function App() {
           </div>
           <div className="mt-4 lg:mx-24 lg:px-24">
             <div className="bg-pink-300 text-center py-6 sm:px-48 rounded-xl">
-              <p className="font-light text-slate-800 text-lg">
-                <span className="font-semibold text-slate-900 text-4xl">
-                  ${newWorth / 100}*
-                </span>{' '}
-              </p>
+              {newWorth === 0 ? (
+                'calculating'
+              ) : (
+                <p className="font-light text-slate-800 text-lg">
+                  <span className="font-semibold text-slate-900 text-4xl">
+                    ${newWorth / 100}*
+                  </span>{' '}
+                </p>
+              )}
+
               <p>estimated account game value</p>
               <p className="font-light text-slate-800 text-lg mb-4">
                 (includes current sales)
@@ -326,7 +333,7 @@ export function App() {
               </p>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-2 lg:mx-48">
+          <div className="grid md:grid-cols-2 md:gap-2 lg:mx-48">
             <div className="text-center bg-pink-300 p-6 rounded-xl my-4">
               <div className="flex justify-center align-middle">
                 {recentImg_icon_url === null ? (
@@ -336,6 +343,8 @@ export function App() {
                     src={recentImg_icon_url}
                     className="rounded-xl shadow-lg mb-3"
                     alt="image of recent game"
+                    width={231}
+                    height={87}
                   ></img>
                 )}
               </div>
@@ -351,8 +360,8 @@ export function App() {
                 {(recentPlaytime2Weeks / 60).toFixed(1)} hours last two weeks.
               </h2>
             </div>
-            <div className="text-center bg-pink-300 pt-4 md:p-4 rounded-xl my-4">
-              <p className="font-bold text-2xl text-slate-900">
+            <div className="text-center bg-pink-300 py-4 md:p-4 rounded-xl my-4">
+              <p className="font-bold text-2xl text-slate-900 md:pt-8">
                 {totalGames} owned games
               </p>
               <p className="text-slate-900 text-2xl font-bold">

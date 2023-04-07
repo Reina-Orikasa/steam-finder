@@ -27402,7 +27402,9 @@ function App() {
                                         children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("img", {
                                             src: avatarfull,
                                             className: "rounded-xl shadow-lg mr-4",
-                                            alt: "avatar image"
+                                            alt: "avatar image",
+                                            width: 184,
+                                            height: 184
                                         }, void 0, false, {
                                             fileName: "src/App.js",
                                             lineNumber: 263,
@@ -27425,12 +27427,12 @@ function App() {
                                                     children: personaname
                                                 }, void 0, false, {
                                                     fileName: "src/App.js",
-                                                    lineNumber: 271,
+                                                    lineNumber: 273,
                                                     columnNumber: 21
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "src/App.js",
-                                                lineNumber: 270,
+                                                lineNumber: 272,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -27441,7 +27443,7 @@ function App() {
                                                         children: player_level
                                                     }, void 0, false, {
                                                         fileName: "src/App.js",
-                                                        lineNumber: 280,
+                                                        lineNumber: 282,
                                                         columnNumber: 21
                                                     }, this),
                                                     loccountrycode === undefined ? "" : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
@@ -27449,13 +27451,13 @@ function App() {
                                                         children: loccountrycode
                                                     }, void 0, false, {
                                                         fileName: "src/App.js",
-                                                        lineNumber: 286,
+                                                        lineNumber: 288,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "src/App.js",
-                                                lineNumber: 279,
+                                                lineNumber: 281,
                                                 columnNumber: 19
                                             }, this),
                                             personastate === 1 ? /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -27466,7 +27468,7 @@ function App() {
                                                         children: "Online"
                                                     }, void 0, false, {
                                                         fileName: "src/App.js",
-                                                        lineNumber: 294,
+                                                        lineNumber: 296,
                                                         columnNumber: 23
                                                     }, this),
                                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
@@ -27478,26 +27480,26 @@ function App() {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "src/App.js",
-                                                        lineNumber: 297,
+                                                        lineNumber: 299,
                                                         columnNumber: 23
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "src/App.js",
-                                                lineNumber: 293,
+                                                lineNumber: 295,
                                                 columnNumber: 21
                                             }, this) : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
                                                 className: "font-light",
                                                 children: "Currently Offline"
                                             }, void 0, false, {
                                                 fileName: "src/App.js",
-                                                lineNumber: 303,
+                                                lineNumber: 305,
                                                 columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "src/App.js",
-                                        lineNumber: 269,
+                                        lineNumber: 271,
                                         columnNumber: 17
                                     }, this)
                                 ]
@@ -27521,7 +27523,7 @@ function App() {
                         children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
                             className: "bg-pink-300 text-center py-6 sm:px-48 rounded-xl",
                             children: [
-                                /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
+                                newWorth === 0 ? "calculating" : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
                                     className: "font-light text-slate-800 text-lg",
                                     children: [
                                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
@@ -27533,21 +27535,21 @@ function App() {
                                             ]
                                         }, void 0, true, {
                                             fileName: "src/App.js",
-                                            lineNumber: 312,
-                                            columnNumber: 17
+                                            lineNumber: 317,
+                                            columnNumber: 19
                                         }, this),
                                         " "
                                     ]
                                 }, void 0, true, {
                                     fileName: "src/App.js",
-                                    lineNumber: 311,
-                                    columnNumber: 15
+                                    lineNumber: 316,
+                                    columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
                                     children: "estimated account game value"
                                 }, void 0, false, {
                                     fileName: "src/App.js",
-                                    lineNumber: 316,
+                                    lineNumber: 323,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
@@ -27555,29 +27557,29 @@ function App() {
                                     children: "(includes current sales)"
                                 }, void 0, false, {
                                     fileName: "src/App.js",
-                                    lineNumber: 317,
+                                    lineNumber: 324,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
                                     children: "Disclaimer: games such as GTA V do not return a base price from Steam's API. This is due to GTA V (and likely other games) not selling a base game. Your account value will likely be higher and this is intended to give you a general value of how much your account is worth."
                                 }, void 0, false, {
                                     fileName: "src/App.js",
-                                    lineNumber: 320,
+                                    lineNumber: 327,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "src/App.js",
-                            lineNumber: 310,
+                            lineNumber: 312,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "src/App.js",
-                        lineNumber: 309,
+                        lineNumber: 311,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                        className: "grid grid-cols-2 gap-2 lg:mx-48",
+                        className: "grid md:grid-cols-2 md:gap-2 lg:mx-48",
                         children: [
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
                                 className: "text-center bg-pink-300 p-6 rounded-xl my-4",
@@ -27587,15 +27589,17 @@ function App() {
                                         children: recentImg_icon_url === null ? "" : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("img", {
                                             src: recentImg_icon_url,
                                             className: "rounded-xl shadow-lg mb-3",
-                                            alt: "image of recent game"
+                                            alt: "image of recent game",
+                                            width: 231,
+                                            height: 87
                                         }, void 0, false, {
                                             fileName: "src/App.js",
-                                            lineNumber: 335,
+                                            lineNumber: 342,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "src/App.js",
-                                        lineNumber: 331,
+                                        lineNumber: 338,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
@@ -27603,7 +27607,7 @@ function App() {
                                         children: "Most played game in 2 weeks:"
                                     }, void 0, false, {
                                         fileName: "src/App.js",
-                                        lineNumber: 342,
+                                        lineNumber: 351,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("a", {
@@ -27613,7 +27617,7 @@ function App() {
                                         children: recentName
                                     }, void 0, false, {
                                         fileName: "src/App.js",
-                                        lineNumber: 343,
+                                        lineNumber: 352,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h2", {
@@ -27624,27 +27628,27 @@ function App() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "src/App.js",
-                                        lineNumber: 350,
+                                        lineNumber: 359,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "src/App.js",
-                                lineNumber: 330,
+                                lineNumber: 337,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                                className: "text-center bg-pink-300 pt-4 md:p-4 rounded-xl my-4",
+                                className: "text-center bg-pink-300 py-4 md:p-4 rounded-xl my-4",
                                 children: [
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
-                                        className: "font-bold text-2xl text-slate-900",
+                                        className: "font-bold text-2xl text-slate-900 md:pt-8",
                                         children: [
                                             totalGames,
                                             " owned games"
                                         ]
                                     }, void 0, true, {
                                         fileName: "src/App.js",
-                                        lineNumber: 355,
+                                        lineNumber: 364,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
@@ -27655,7 +27659,7 @@ function App() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "src/App.js",
-                                        lineNumber: 358,
+                                        lineNumber: 367,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
@@ -27666,19 +27670,19 @@ function App() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "src/App.js",
-                                        lineNumber: 361,
+                                        lineNumber: 370,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "src/App.js",
-                                lineNumber: 354,
+                                lineNumber: 363,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "src/App.js",
-                        lineNumber: 329,
+                        lineNumber: 336,
                         columnNumber: 11
                     }, this)
                 ]
@@ -27694,14 +27698,14 @@ function App() {
                         gameHours: maxHours
                     }, void 0, false, {
                         fileName: "src/App.js",
-                        lineNumber: 374,
+                        lineNumber: 383,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _gameRecDefault.default), {
                         allIds: allGameIds
                     }, void 0, false, {
                         fileName: "src/App.js",
-                        lineNumber: 375,
+                        lineNumber: 384,
                         columnNumber: 11
                     }, this)
                 ]
@@ -27792,7 +27796,9 @@ function GameRec(appId) {
                             children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("img", {
                                 src: gameInfo.header_image,
                                 className: "rounded-xl mb-2",
-                                alt: "image of the recommended game"
+                                alt: "image of the recommended game",
+                                width: 460,
+                                height: 215
                             }, void 0, false, {
                                 fileName: "src/GameRec.js",
                                 lineNumber: 56,
@@ -27812,12 +27818,12 @@ function GameRec(appId) {
                                 children: gameInfo.name
                             }, void 0, false, {
                                 fileName: "src/GameRec.js",
-                                lineNumber: 64,
+                                lineNumber: 66,
                                 columnNumber: 17
                             }, this)
                         }, void 0, false, {
                             fileName: "src/GameRec.js",
-                            lineNumber: 63,
+                            lineNumber: 65,
                             columnNumber: 15
                         }, this),
                         gameInfo === "" || gameInfo.price_overview === undefined ? "" : /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -27827,12 +27833,12 @@ function GameRec(appId) {
                                 children: gameInfo.release_date.date
                             }, void 0, false, {
                                 fileName: "src/GameRec.js",
-                                lineNumber: 76,
+                                lineNumber: 78,
                                 columnNumber: 19
                             }, this)
                         }, void 0, false, {
                             fileName: "src/GameRec.js",
-                            lineNumber: 75,
+                            lineNumber: 77,
                             columnNumber: 17
                         }, this),
                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
@@ -27840,7 +27846,7 @@ function GameRec(appId) {
                             children: gameInfo.short_description
                         }, void 0, false, {
                             fileName: "src/GameRec.js",
-                            lineNumber: 81,
+                            lineNumber: 83,
                             columnNumber: 15
                         }, this),
                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("button", {
@@ -27849,14 +27855,14 @@ function GameRec(appId) {
                             children: "Another!"
                         }, void 0, false, {
                             fileName: "src/GameRec.js",
-                            lineNumber: 82,
+                            lineNumber: 84,
                             columnNumber: 15
                         }, this),
                         /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
                             children: loadingState || loadingRandomGame ? "loading" : ""
                         }, void 0, false, {
                             fileName: "src/GameRec.js",
-                            lineNumber: 88,
+                            lineNumber: 90,
                             columnNumber: 15
                         }, this)
                     ]
@@ -28147,7 +28153,9 @@ function MostPlayed(maxGameId) {
                         children: /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("img", {
                             src: header_image,
                             className: "rounded-xl mb-2",
-                            alt: "image of your most played game"
+                            alt: "image of your most played game",
+                            width: 460,
+                            height: 215
                         }, void 0, false, {
                             fileName: "src/MostPlayed.js",
                             lineNumber: 26,
@@ -28167,12 +28175,12 @@ function MostPlayed(maxGameId) {
                             children: name
                         }, void 0, false, {
                             fileName: "src/MostPlayed.js",
-                            lineNumber: 34,
+                            lineNumber: 36,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "src/MostPlayed.js",
-                        lineNumber: 33,
+                        lineNumber: 35,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("h3", {
@@ -28183,7 +28191,7 @@ function MostPlayed(maxGameId) {
                         ]
                     }, void 0, true, {
                         fileName: "src/MostPlayed.js",
-                        lineNumber: 43,
+                        lineNumber: 45,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
@@ -28193,12 +28201,12 @@ function MostPlayed(maxGameId) {
                             children: release_date.date
                         }, void 0, false, {
                             fileName: "src/MostPlayed.js",
-                            lineNumber: 48,
+                            lineNumber: 50,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "src/MostPlayed.js",
-                        lineNumber: 47,
+                        lineNumber: 49,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
@@ -28206,7 +28214,7 @@ function MostPlayed(maxGameId) {
                         children: short_description
                     }, void 0, false, {
                         fileName: "src/MostPlayed.js",
-                        lineNumber: 51,
+                        lineNumber: 53,
                         columnNumber: 11
                     }, this)
                 ]

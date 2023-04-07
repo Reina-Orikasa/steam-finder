@@ -57,6 +57,8 @@ export default function GameRec(appId) {
                   src={gameInfo.header_image}
                   className="rounded-xl mb-2"
                   alt="image of the recommended game"
+                  width={460}
+                  height={215}
                 />
               </div>
 
