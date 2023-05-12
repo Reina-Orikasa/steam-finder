@@ -18,11 +18,13 @@ export function App() {
     let maxHours = 0;
     let maxGameName = '';
     let maxGameId = '';
+    let totalHours = 0;
     let allGameIds = [];
     const response = await fetch(
       `/.netlify/functions/steam-fetch?steamid=${profileSearch}`
     );
     const json = await response.json();
+
     if (response.status !== 500) {
       updateErrorMsg('');
       const player_level = json[1].response.player_level;
@@ -42,9 +44,11 @@ export function App() {
       let recentPlaytime2Weeks = '';
 
       if (json[3].response.games === undefined) {
+        // private account
         updateErrorMsg('Your account must be set to public!');
         setPrivateAccount(true);
       } else if (json[2].response.total_count == 0) {
+        // non-private account, no recent playtime in 2 weeks
         recentAppId = null;
         recentImg_icon_url = null;
         recentName = 'None';
@@ -52,6 +56,7 @@ export function App() {
 
         totalGames = json[3].response.game_count;
         json[3].response.games.forEach((item) => {
+          totalHours += item.playtime_forever;
           allGameIds.push(item.appid);
           if (item.playtime_forever > maxHours) {
             maxHours = item.playtime_forever;
@@ -63,6 +68,7 @@ export function App() {
           }
         });
       } else {
+        // non-private account, recent playtime in 2 weeks true
         setPrivateAccount(false);
         let recentGame = json[2].response;
         recentAppId = recentGame.games[0].appid;
@@ -71,6 +77,7 @@ export function App() {
 
         totalGames = json[3].response.game_count;
         json[3].response.games.forEach((item) => {
+          totalHours += item.playtime_forever;
           allGameIds.push(item.appid);
           if (item.playtime_forever > maxHours) {
             maxHours = item.playtime_forever;
@@ -82,6 +89,8 @@ export function App() {
           }
         });
       }
+
+      console.log(totalHours);
 
       setProfileInfo({
         avatarfull,
@@ -102,6 +111,7 @@ export function App() {
         maxGameId,
         profileurl,
         allGameIds,
+        totalHours,
       });
     } else {
       updateErrorMsg('You have attempted to enter an invalid steamID64!');
@@ -129,6 +139,7 @@ export function App() {
     maxGameId,
     profileurl,
     allGameIds,
+    totalHours,
   } = profileInfo;
 
   let joinedGameIds;
@@ -370,6 +381,9 @@ export function App() {
               <p className="font-bold text-slate-900 text-2xl">
                 {((100 * gamesNeverPlayed) / totalGames).toFixed(0)}% of library
                 unplayed
+              </p>
+              <p className="font-bold text-slate-900 text-2xl">
+                {(totalHours / 60).toFixed(1)} hours wasted...
               </p>
             </div>
           </div>
