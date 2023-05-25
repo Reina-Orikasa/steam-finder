@@ -372,18 +372,25 @@ export function App() {
               </h2>
             </div>
             <div className="text-center bg-pink-300 py-4 md:p-4 rounded-xl my-4">
-              <p className="font-bold text-2xl text-slate-900 md:pt-8">
-                {totalGames} owned games
+              <p className="font-light text-xl text-slate-900 md:pt-8">
+                <span className="text-3xl font-bold">{totalGames} </span>owned
+                games
               </p>
-              <p className="text-slate-900 text-2xl font-bold">
-                {gamesNeverPlayed} games unplayed
+              <p className="font-light text-xl text-slate-900">
+                <span className="text-3xl font-bold">{gamesNeverPlayed}</span>{' '}
+                games unplayed
               </p>
-              <p className="font-bold text-slate-900 text-2xl">
-                {((100 * gamesNeverPlayed) / totalGames).toFixed(0)}% of library
-                unplayed
+              <p className="font-light text-xl text-slate-900">
+                <span className="text-3xl font-bold">
+                  {((100 * gamesNeverPlayed) / totalGames).toFixed(0)}%{' '}
+                </span>{' '}
+                of library unplayed
               </p>
-              <p className="font-bold text-slate-900 text-2xl">
-                {(totalHours / 60).toFixed(1)} hours wasted...
+              <p className="font-light text-xl text-slate-900">
+                <span className="text-3xl font-semibold">
+                  {(totalHours / 60).toFixed(1)}{' '}
+                </span>{' '}
+                hours wasted...
               </p>
             </div>
           </div>

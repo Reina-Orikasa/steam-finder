@@ -27649,10 +27649,20 @@ function App() {
                                 className: "text-center bg-pink-300 py-4 md:p-4 rounded-xl my-4",
                                 children: [
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
-                                        className: "font-bold text-2xl text-slate-900 md:pt-8",
+                                        className: "font-light text-xl text-slate-900 md:pt-8",
                                         children: [
-                                            totalGames,
-                                            " owned games"
+                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                                                className: "text-3xl font-bold",
+                                                children: [
+                                                    totalGames,
+                                                    " "
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "src/App.js",
+                                                lineNumber: 376,
+                                                columnNumber: 17
+                                            }, this),
+                                            "owned games"
                                         ]
                                     }, void 0, true, {
                                         fileName: "src/App.js",
@@ -27660,36 +27670,67 @@ function App() {
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
-                                        className: "text-slate-900 text-2xl font-bold",
+                                        className: "font-light text-xl text-slate-900",
                                         children: [
-                                            gamesNeverPlayed,
-                                            " games unplayed"
+                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                                                className: "text-3xl font-bold",
+                                                children: gamesNeverPlayed
+                                            }, void 0, false, {
+                                                fileName: "src/App.js",
+                                                lineNumber: 380,
+                                                columnNumber: 17
+                                            }, this),
+                                            " ",
+                                            "games unplayed"
                                         ]
                                     }, void 0, true, {
                                         fileName: "src/App.js",
-                                        lineNumber: 378,
+                                        lineNumber: 379,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
-                                        className: "font-bold text-slate-900 text-2xl",
+                                        className: "font-light text-xl text-slate-900",
                                         children: [
-                                            (100 * gamesNeverPlayed / totalGames).toFixed(0),
-                                            "% of library unplayed"
+                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                                                className: "text-3xl font-bold",
+                                                children: [
+                                                    (100 * gamesNeverPlayed / totalGames).toFixed(0),
+                                                    "%",
+                                                    " "
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "src/App.js",
+                                                lineNumber: 384,
+                                                columnNumber: 17
+                                            }, this),
+                                            " ",
+                                            "of library unplayed"
                                         ]
                                     }, void 0, true, {
                                         fileName: "src/App.js",
-                                        lineNumber: 381,
+                                        lineNumber: 383,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
-                                        className: "font-bold text-slate-900 text-2xl",
+                                        className: "font-light text-xl text-slate-900",
                                         children: [
-                                            (totalHours / 60).toFixed(1),
-                                            " hours wasted..."
+                                            /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
+                                                className: "text-3xl font-semibold",
+                                                children: [
+                                                    (totalHours / 60).toFixed(1),
+                                                    " "
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "src/App.js",
+                                                lineNumber: 390,
+                                                columnNumber: 17
+                                            }, this),
+                                            " ",
+                                            "hours wasted..."
                                         ]
                                     }, void 0, true, {
                                         fileName: "src/App.js",
-                                        lineNumber: 385,
+                                        lineNumber: 389,
                                         columnNumber: 15
                                     }, this)
                                 ]
@@ -27717,14 +27758,14 @@ function App() {
                         gameHours: maxHours
                     }, void 0, false, {
                         fileName: "src/App.js",
-                        lineNumber: 397,
+                        lineNumber: 404,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _gameRecDefault.default), {
                         allIds: allGameIds
                     }, void 0, false, {
                         fileName: "src/App.js",
-                        lineNumber: 398,
+                        lineNumber: 405,
                         columnNumber: 11
                     }, this)
                 ]
