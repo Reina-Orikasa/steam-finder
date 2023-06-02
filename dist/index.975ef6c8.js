@@ -27538,7 +27538,7 @@ function App() {
                                             className: "font-semibold text-slate-900 text-4xl",
                                             children: [
                                                 "$",
-                                                newWorth / 100,
+                                                (newWorth / 100).toFixed(2),
                                                 "*"
                                             ]
                                         }, void 0, true, {

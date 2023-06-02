@@ -326,7 +326,7 @@ export function App() {
               ) : (
                 <p className="font-light text-slate-800 text-lg">
                   <span className="font-semibold text-slate-900 text-4xl">
-                    ${newWorth / 100}*
+                    ${(newWorth / 100).toFixed(2)}*
                   </span>{' '}
                 </p>
               )}
