@@ -143,8 +143,8 @@
     }
   }
 })({"1xC6H":[function(require,module,exports) {
-var Refresh = require("957282135d5eecc3");
-var ErrorOverlay = require("3075648454e8988a");
+var Refresh = require("2cc600a55c2345bf");
+var ErrorOverlay = require("480c4215605ddc73");
 Refresh.injectIntoGlobalHook(window);
 window.$RefreshReg$ = function() {};
 window.$RefreshSig$ = function() {
@@ -163,11 +163,11 @@ window.addEventListener("parcelhmraccept", ()=>{
     ErrorOverlay.dismissRuntimeErrors();
 });
 
-},{"957282135d5eecc3":"786KC","3075648454e8988a":"1dldy"}],"786KC":[function(require,module,exports) {
+},{"2cc600a55c2345bf":"786KC","480c4215605ddc73":"1dldy"}],"786KC":[function(require,module,exports) {
 "use strict";
-module.exports = require("96a986fab8464158");
+module.exports = require("3b14915f045485d0");
 
-},{"96a986fab8464158":"hdge7"}],"hdge7":[function(require,module,exports) {
+},{"3b14915f045485d0":"hdge7"}],"hdge7":[function(require,module,exports) {
 /** @license React v0.9.0
  * react-refresh-runtime.development.js
  *
@@ -628,7 +628,7 @@ module.exports = require("96a986fab8464158");
 })();
 
 },{}],"1dldy":[function(require,module,exports) {
-var process = require("2fe57773d644de0");
+var process = require("e99f2033b4d5a0db");
 !function(e, t) {
     module.exports = t();
 }(window, function() {
@@ -2358,7 +2358,7 @@ var process = require("2fe57773d644de0");
     ]);
 });
 
-},{"2fe57773d644de0":"d5jf4"}],"d5jf4":[function(require,module,exports) {
+},{"e99f2033b4d5a0db":"d5jf4"}],"d5jf4":[function(require,module,exports) {
 // shim for using process in browser
 var process = module.exports = {};
 // cached from whatever global is present so that test runners that stub it
@@ -2942,9 +2942,9 @@ root.render(/*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)((0, _app.App), {}, void 0, 
 }
 },{"react/jsx-dev-runtime":"iTorj","react-dom/client":"lOjBx","./App":"2kQhy","@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"km3Ru"}],"iTorj":[function(require,module,exports) {
 "use strict";
-module.exports = require("b910759f34832425");
+module.exports = require("ad69a4ab1c68df8e");
 
-},{"b910759f34832425":"48uCM"}],"48uCM":[function(require,module,exports) {
+},{"ad69a4ab1c68df8e":"48uCM"}],"48uCM":[function(require,module,exports) {
 /**
  * @license React
  * react-jsx-dev-runtime.development.js
@@ -2956,7 +2956,7 @@ module.exports = require("b910759f34832425");
  */ "use strict";
 (function() {
     "use strict";
-    var React = require("ae2713a7cb2f7c36");
+    var React = require("bcd35d4c1953ca03");
     // ATTENTION
     // When adding new symbols to this file,
     // Please consider also adding to 'react-devtools-shared/src/backend/ReactSymbols'
@@ -3775,11 +3775,11 @@ module.exports = require("b910759f34832425");
     exports.jsxDEV = jsxDEV$1;
 })();
 
-},{"ae2713a7cb2f7c36":"21dqq"}],"21dqq":[function(require,module,exports) {
+},{"bcd35d4c1953ca03":"21dqq"}],"21dqq":[function(require,module,exports) {
 "use strict";
-module.exports = require("7587b197cae2df38");
+module.exports = require("55167b37e473cd2");
 
-},{"7587b197cae2df38":"6YvXz"}],"6YvXz":[function(require,module,exports) {
+},{"55167b37e473cd2":"6YvXz"}],"6YvXz":[function(require,module,exports) {
 /**
  * @license React
  * react.development.js
@@ -5647,7 +5647,7 @@ module.exports = require("7587b197cae2df38");
 
 },{}],"lOjBx":[function(require,module,exports) {
 "use strict";
-var m = require("761babc7b2d6c2e2");
+var m = require("6bfddf463a0b20a7");
 var i = m.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
 exports.createRoot = function(c, o) {
     i.usingClientEntryPoint = true;
@@ -5666,7 +5666,7 @@ exports.hydrateRoot = function(c, h, o) {
     }
 };
 
-},{"761babc7b2d6c2e2":"j6uA9"}],"j6uA9":[function(require,module,exports) {
+},{"6bfddf463a0b20a7":"j6uA9"}],"j6uA9":[function(require,module,exports) {
 "use strict";
 function checkDCE() {
     /* global __REACT_DEVTOOLS_GLOBAL_HOOK__ */ if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ === "undefined" || typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.checkDCE !== "function") return;
@@ -5680,9 +5680,9 @@ function checkDCE() {
     // a false positive.
     throw new Error("^_^");
 }
-module.exports = require("39b153ab91e9c15a");
+module.exports = require("37b051694161f98e");
 
-},{"39b153ab91e9c15a":"3iA9v"}],"3iA9v":[function(require,module,exports) {
+},{"37b051694161f98e":"3iA9v"}],"3iA9v":[function(require,module,exports) {
 /**
  * @license React
  * react-dom.development.js
@@ -5695,8 +5695,8 @@ module.exports = require("39b153ab91e9c15a");
 (function() {
     "use strict";
     /* global __REACT_DEVTOOLS_GLOBAL_HOOK__ */ if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== "undefined" && typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart === "function") __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(new Error());
-    var React = require("f85d48556f2accf1");
-    var Scheduler = require("70dce8ee7cc4a6ca");
+    var React = require("cefad506a5fe4a3c");
+    var Scheduler = require("3f1dceb5c6bf0f50");
     var ReactSharedInternals = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
     var suppressWarning = false;
     function setSuppressWarning(newSuppressWarning) {
@@ -26667,11 +26667,11 @@ module.exports = require("39b153ab91e9c15a");
     /* global __REACT_DEVTOOLS_GLOBAL_HOOK__ */ if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ !== "undefined" && typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop === "function") __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop(new Error());
 })();
 
-},{"f85d48556f2accf1":"21dqq","70dce8ee7cc4a6ca":"juvHo"}],"juvHo":[function(require,module,exports) {
+},{"cefad506a5fe4a3c":"21dqq","3f1dceb5c6bf0f50":"juvHo"}],"juvHo":[function(require,module,exports) {
 "use strict";
-module.exports = require("817209fe6a48e5c2");
+module.exports = require("ede255e7fc063477");
 
-},{"817209fe6a48e5c2":"RqdIf"}],"RqdIf":[function(require,module,exports) {
+},{"ede255e7fc063477":"RqdIf"}],"RqdIf":[function(require,module,exports) {
 /**
  * @license React
  * scheduler.development.js
@@ -27569,6 +27569,7 @@ function App() {
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
+                                    className: "px-12",
                                     children: "Disclaimer: games such as GTA V do not return a base price from Steam's API. This is due to GTA V (and likely other games) not selling a base game. Your account value will likely be higher and this is intended to give you a general value of how much your account is worth."
                                 }, void 0, false, {
                                     fileName: "src/App.js",
@@ -27587,10 +27588,10 @@ function App() {
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                        className: "grid md:grid-cols-2 md:gap-2 lg:mx-48",
+                        className: "grid md:grid-cols-2 md:gap-2 lg:mx-48 my-4",
                         children: [
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                                className: "text-center bg-pink-300 p-6 rounded-xl my-4",
+                                className: "text-center bg-pink-300 p-6 rounded-xl mb-4",
                                 children: [
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
                                         className: "flex justify-center align-middle",
@@ -27646,7 +27647,7 @@ function App() {
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("div", {
-                                className: "text-center bg-pink-300 py-4 md:p-4 rounded-xl my-4",
+                                className: "text-center bg-pink-300 py-4 md:p-4 rounded-xl",
                                 children: [
                                     /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("p", {
                                         className: "font-light text-xl text-slate-900 md:pt-8",
@@ -27715,7 +27716,7 @@ function App() {
                                         className: "font-light text-xl text-slate-900",
                                         children: [
                                             /*#__PURE__*/ (0, _jsxDevRuntime.jsxDEV)("span", {
-                                                className: "text-3xl font-semibold",
+                                                className: "text-3xl font-bold",
                                                 children: [
                                                     (totalHours / 60).toFixed(1),
                                                     " "
@@ -27982,7 +27983,7 @@ exports.export = function(dest, destName, get) {
 
 },{}],"km3Ru":[function(require,module,exports) {
 "use strict";
-var Refresh = require("3b6b5dac13f96ccc");
+var Refresh = require("b9657d5e385e92c0");
 function debounce(func, delay) {
     {
         let timeout = undefined;
@@ -28113,7 +28114,7 @@ function registerExportsForReactRefresh(module1) {
     }
 }
 
-},{"3b6b5dac13f96ccc":"786KC"}],"8hyda":[function(require,module,exports) {
+},{"b9657d5e385e92c0":"786KC"}],"8hyda":[function(require,module,exports) {
 var $parcel$ReactRefreshHelpers$d160 = require("@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;

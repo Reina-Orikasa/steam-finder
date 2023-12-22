@@ -421,6 +421,11 @@ img, video {
   padding-right: 1rem;
 }
 
+.px-12 {
+  padding-left: 3rem;
+  padding-right: 3rem;
+}
+
 .text-center {
   text-align: center;
 }

@@ -335,7 +335,7 @@ export function App() {
               <p className="font-light text-slate-800 text-lg mb-4">
                 (includes current sales)
               </p>
-              <p>
+              <p className='px-12'>
                 Disclaimer: games such as GTA V do not return a base price from
                 Steam's API. This is due to GTA V (and likely other games) not
                 selling a base game. Your account value will likely be higher
@@ -344,8 +344,8 @@ export function App() {
               </p>
             </div>
           </div>
-          <div className="grid md:grid-cols-2 md:gap-2 lg:mx-48">
-            <div className="text-center bg-pink-300 p-6 rounded-xl my-4">
+          <div className="grid md:grid-cols-2 md:gap-2 lg:mx-48 my-4">
+            <div className="text-center bg-pink-300 p-6 rounded-xl mb-4">
               <div className="flex justify-center align-middle">
                 {recentImg_icon_url === null ? (
                   ''
@@ -371,7 +371,7 @@ export function App() {
                 {(recentPlaytime2Weeks / 60).toFixed(1)} hours last two weeks.
               </h2>
             </div>
-            <div className="text-center bg-pink-300 py-4 md:p-4 rounded-xl my-4">
+            <div className="text-center bg-pink-300 py-4 md:p-4 rounded-xl">
               <p className="font-light text-xl text-slate-900 md:pt-8">
                 <span className="text-3xl font-bold">{totalGames} </span>owned
                 games
@@ -387,7 +387,7 @@ export function App() {
                 of library unplayed
               </p>
               <p className="font-light text-xl text-slate-900">
-                <span className="text-3xl font-semibold">
+                <span className="text-3xl font-bold">
                   {(totalHours / 60).toFixed(1)}{' '}
                 </span>{' '}
                 hours wasted...
