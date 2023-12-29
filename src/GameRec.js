@@ -2,15 +2,26 @@ import { useEffect, useState } from 'react';
 
 export default function GameRec(appId) {
   const [gameInfo, setGameInfo] = useState('');
-  const [gameAppId, setgameAppId] = useState(appId.id);
+  const [gameAppId, setgameAppId] = useState('');
   const [loadingState, setLoadingState] = useState(false);
-  let loadingRandomGame = false;
 
-  function getGameInfo() {
-    if (gameAppId !== undefined) {
+  function getGameInfo(retryCount = 0) {
+    const maxRetries = 5;
+
+    if (gameAppId !== undefined && gameAppId !== '') {
       fetch(`/.netlify/functions/getGameInfo?appId=${gameAppId}`)
         .then((resp) => resp.json())
-        .then((info) => setGameInfo(Object.values(info)[0].data));
+        .then((info) => setGameInfo(Object.values(info)[0].data))
+        .then(setLoadingState(false))
+        .catch((err) => {
+          console.log(`Error occurred: ${err}, you pepega.`);
+          if (retryCount < maxRetries) {
+            console.log(`Retrying... Attempt ${retryCount + 1}`);
+            getGameInfo(retryCount + 1);
+          } else {
+            console.log('Max retries reached. No more attempts.');
+          }
+        });
     }
   }
   let suggestGameURL = `https://store.steampowered.com/app/${gameAppId}`;
@@ -19,33 +30,58 @@ export default function GameRec(appId) {
     setgameAppId(appId.allIds[Math.floor(Math.random() * appId.allIds.length)]);
   }
 
-  // random game
   useEffect(() => {
-    setLoadingState(true);
-    loadingRandomGame = true;
-    setTimeout(() => {
-      loadingRandomGame = false;
-      setLoadingState(false);
-      getGameInfo();
-    }, 1500);
-  }, [gameAppId]);
+    let isMounted = true; // Track if the component is mounted
+    let timeoutId;
 
-  // initial load
-  useEffect(() => {
-    setLoadingState(true);
-    loadingRandomGame = true;
-    setTimeout(() => {
-      loadingRandomGame = false;
-      setLoadingState(false);
-      getRandomGame();
-    }, 200);
-  }, [appId]);
+    // Function to set loading state
+    const setLoading = (isLoading) => {
+      if (isMounted) {
+        setLoadingState(isLoading);
+      }
+    };
+
+    // Load game information
+    const loadGameInfo = () => {
+      if (gameAppId) {
+        setLoading(true);
+        timeoutId = setTimeout(() => {
+          if (isMounted) {
+            getGameInfo();
+          }
+        }, 1000);
+      }
+    };
+
+    // Load a random game
+    const loadRandomGame = () => {
+      setLoading(true);
+      timeoutId = setTimeout(() => {
+        if (isMounted) {
+          getRandomGame();
+        }
+      }, 200);
+    };
+
+    // Determine which function to call based on the state
+    if (gameAppId) {
+      loadGameInfo();
+    } else if (appId && appId.allIds && appId.allIds.length > 0) {
+      loadRandomGame();
+    }
+
+    // Cleanup function
+    return () => {
+      isMounted = false;
+      clearTimeout(timeoutId);
+    };
+  }, [gameAppId, appId]);
 
   return (
     <>
       <div className="mb-8 lg:mx-24 lg:px-24">
         <div className="bg-pink-300 text-center p-8 rounded-xl">
-          {loadingRandomGame || gameInfo === undefined ? (
+          {loadingState || gameInfo === undefined ? (
             'loading...'
           ) : (
             <>
@@ -87,7 +123,7 @@ export default function GameRec(appId) {
               >
                 Another!
               </button>
-              <p>{loadingState || loadingRandomGame ? 'loading' : ''}</p>
+              <p>{loadingState ? 'loading' : ''}</p>
             </>
           )}
         </div>

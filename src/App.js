@@ -90,8 +90,6 @@ export function App() {
         });
       }
 
-      console.log(totalHours);
-
       setProfileInfo({
         avatarfull,
         personaname,
@@ -372,7 +370,7 @@ export function App() {
               </h2>
             </div>
             <div className="text-center bg-pink-300 p-6 md:mb-4 rounded-xl">
-              <p className="font-light text-xl text-slate-900 md:pt-5">
+              <p className="font-light text-xl text-slate-900 md:mt-4">
                 <span className="text-3xl font-bold">{totalGames} </span>owned
                 games
               </p>
